@@ -6,117 +6,168 @@
 <title>WON — Weather or Not</title>
 <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root { --poor:#fd9363; --fair:#f5c842; --good:#83e9d0; }
-html,body { width:100%; overflow-x:hidden; background:#fff; }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--poor:#fd9363;--fair:#f5c842;--good:#83e9d0}
+html,body{width:100%;overflow-x:hidden;background:#fff}
 
-/* ── SCROLL ARCHITECTURE ── */
-/* One tall div. One sticky panel inside it. */
-#scroll-track { position:relative; }
-#sticky-panel  { position:sticky; top:0; height:100vh; width:100%; overflow:hidden; }
+/* ── ONE STICKY PANEL ── */
+#scroll-track{position:relative}
+#sticky-panel{position:sticky;top:0;height:100vh;width:100%;overflow:hidden}
 
-/* Intro layer — absolute inside sticky panel */
-#p-intro {
-  position:absolute; inset:0;
-  background:#fff; z-index:4;
-  transition:opacity 0.35s ease;
+/* ── INTRO LAYER ── */
+#p-intro{
+  position:absolute;inset:0;background:#fff;
+  z-index:10;transition:opacity 0.3s ease;
 }
-
-/* Hours layer — absolute inside sticky panel */
-#p-hours { position:absolute; inset:0; z-index:3; }
-
-/* ── INTRO ── */
-.logo { font-family:'Manrope',sans-serif; font-weight:900; font-size:20px; letter-spacing:-1px; }
-.i-nav { position:absolute; top:24px; left:20px; z-index:10; }
-#i-headline {
-  position:absolute; inset:0;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:8px;
-  font-family:'Gabarito',sans-serif; font-weight:700;
-  font-size:clamp(32px,7.2vw,104px); line-height:1.05; color:#000;
-  padding:0 16px;
+.i-nav{position:absolute;top:24px;left:32px;z-index:2}
+.logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000}
+#i-headline{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;font-family:'Gabarito',sans-serif;font-weight:700;
+  font-size:clamp(36px,7.5vw,108px);line-height:1;color:#000;
+  padding:0 20px;text-align:center;
 }
-.i-row { display:flex; align-items:center; justify-content:center; gap:clamp(6px,1.5vw,14px); }
-.sthumb, #zthumb { display:inline-flex; flex-direction:column; flex-shrink:0; }
-.sthumb .tt, #zthumb .tt { font-family:'Manrope',sans-serif; font-weight:700; font-size:11px; color:#000; margin-bottom:2px; }
-#zthumb.hidden { opacity:0; }
-#scroll-cue {
-  position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-  font-family:'Manrope',sans-serif; font-size:9px; font-weight:700;
-  letter-spacing:3px; text-transform:uppercase; color:rgba(0,0,0,0.3);
+.i-row{display:flex;align-items:center;justify-content:center;gap:16px}
+.vid-thumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
+.vid-thumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
+.vid-thumb video{display:block;object-fit:cover;border-radius:5px;background:#eee}
+#zthumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
+#zthumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
+#zthumb video{display:block;object-fit:cover;border-radius:5px;background:#eee}
+#zthumb.hidden{opacity:0}
+#scroll-cue{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-family:'Manrope',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:rgba(0,0,0,0.3)
 }
-#scroll-cue::after { content:''; display:block; width:1px; height:36px; background:rgba(0,0,0,0.2); }
+#scroll-cue::after{content:'';display:block;width:1px;height:36px;background:rgba(0,0,0,0.2)}
 
 /* ── ZOOM OVERLAY ── */
-#zoom-overlay { position:fixed; z-index:9999; overflow:hidden; border-radius:6px; pointer-events:none; opacity:0; }
-.zt-label { position:absolute; top:-18px; left:0; font-family:'Manrope',sans-serif; font-weight:700; font-size:11px; color:#000; }
+#zoom-overlay{
+  position:fixed;z-index:9999;overflow:hidden;
+  border-radius:6px;pointer-events:none;opacity:0
+}
 
-/* ── HOURS ── */
-.h-bg { position:absolute; inset:0; background:var(--poor); transition:background 0.55s ease; z-index:0; }
-#p-hours::after { content:''; position:absolute; inset:0; z-index:1; background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 18px,rgba(0,0,0,.025) 18px,rgba(0,0,0,.025) 19px); pointer-events:none; }
-.h-nav { position:absolute; top:0; left:0; right:0; padding:20px 40px; display:flex; align-items:center; z-index:20; }
-.hours-col { position:absolute; left:52px; top:131px; bottom:190px; display:flex; flex-direction:column; justify-content:space-between; font-family:'Manrope',sans-serif; font-weight:700; z-index:10; }
-.htick { font-size:14px; color:rgba(0,0,0,0.12); line-height:1; white-space:nowrap; transition:color 0.3s, font-size 0.25s ease; }
-.htick.active { font-size:80px; color:#000; line-height:0.85; }
-.metrics-grid { position:absolute; left:270px; top:90px; display:grid; grid-template-columns:175px 175px; grid-template-rows:205px 205px 205px; z-index:10; }
-.mcell { display:flex; flex-direction:column; justify-content:center; padding:0 0 0 20px; }
-.mlrow { display:flex; align-items:center; gap:10px; margin-bottom:22px; }
-.mdot { width:8px; height:8px; border-radius:50%; background:#000; flex-shrink:0; }
-.mlabel { font-family:'Manrope',sans-serif; font-size:13px; font-weight:700; color:#000; }
-.mlabel em { font-style:normal; font-weight:400; color:rgba(0,0,0,0.5); }
-.mval { font-family:'Gabarito',sans-serif; font-weight:700; font-size:64px; line-height:1; color:#020202; }
-.munit { font-size:26px; }
-@keyframes flipIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.mval.flip { animation:flipIn 0.22s ease forwards; }
-#weather-pattern { position:absolute; right:0; top:0; width:650px; height:650px; z-index:9; pointer-events:none; overflow:visible; }
-#runner-panel { position:absolute; left:534px; top:85px; width:611px; height:786px; overflow:hidden; z-index:6; opacity:0; }
-#runner-panel video { width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; }
-.w-icon { position:absolute; left:280px; bottom:232px; font-size:46px; line-height:1; z-index:10; }
-.h-bottom { position:absolute; bottom:0; left:0; right:0; height:186px; display:flex; align-items:stretch; z-index:20; }
-.h-tagline { flex:1; display:flex; align-items:center; padding-left:270px; font-family:'Manrope',sans-serif; font-size:15px; line-height:1.65; color:#000; }
-
-/* ── OUTRO ── */
-#s-outro { min-height:100vh; background:var(--good); overflow:hidden; display:flex; flex-direction:column; position:relative; }
-#s-outro::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 10px,rgba(0,0,0,.04) 10px,rgba(0,0,0,.04) 11px); pointer-events:none; }
-.o-nav { position:relative; padding:28px 40px; z-index:1; }
-.o-body { flex:1; position:relative; z-index:1; display:flex; flex-direction:column; justify-content:center; padding:40px 40px 40px 335px; }
-.o-hl { font-family:'Gabarito',sans-serif; font-weight:700; font-size:clamp(52px,8vw,120px); line-height:0.93; color:#000; }
-.o-sub { margin-top:44px; font-family:'Manrope',sans-serif; font-size:15px; line-height:1.65; color:rgba(0,0,0,0.65); max-width:400px; }
+/* ── HOURS LAYER ── */
+#p-hours{position:absolute;inset:0;z-index:1}
+.h-bg{position:absolute;inset:0;background:var(--poor);transition:background 0.5s ease;z-index:0}
+#p-hours::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:repeating-linear-gradient(
+    -45deg,transparent 0,transparent 18px,
+    rgba(0,0,0,0.025) 18px,rgba(0,0,0,0.025) 19px
+  )
+}
+.h-nav{position:absolute;top:0;left:0;right:0;padding:18px 32px;z-index:20}
+.hours-col{
+  position:absolute;left:52px;top:131px;bottom:190px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  font-family:'Manrope',sans-serif;font-weight:700;z-index:10
+}
+.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:color 0.3s,font-size 0.25s}
+.htick.active{font-size:80px;color:#000;line-height:0.85}
+.metrics-grid{
+  position:absolute;left:270px;top:90px;
+  display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
+  z-index:10
+}
+.mcell{display:flex;flex-direction:column;justify-content:center;padding:0 0 0 20px}
+.mlrow{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.mdot{width:8px;height:8px;border-radius:50%;background:#000;flex-shrink:0}
+.mlabel{font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#000}
+.mlabel em{font-style:normal;font-weight:400;color:rgba(0,0,0,0.5)}
+.mval{font-family:'Gabarito',sans-serif;font-weight:700;font-size:64px;line-height:1;color:#020202}
+.munit{font-size:26px}
+@keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mval.flip{animation:flipIn 0.2s ease forwards}
+#runner-panel{
+  position:absolute;left:534px;top:85px;width:611px;height:786px;
+  overflow:hidden;z-index:6;opacity:0;transition:opacity 0.3s
+}
+#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block}
+.w-icon{position:absolute;left:270px;bottom:226px;font-size:46px;z-index:10}
+.h-bottom{
+  position:absolute;bottom:0;left:0;right:0;height:186px;
+  display:flex;align-items:center;z-index:20;padding-left:270px
+}
+.h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
 
 /* ── STICKY CTA ── */
-#sticky-cta { position:fixed; bottom:0; right:0; width:590px; height:186px; background:#000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:0 50px; cursor:pointer; z-index:10000; transform:translateX(100%); transition:transform 0.5s cubic-bezier(0.4,0,0.2,1); }
-#sticky-cta.visible { transform:translateX(0); }
-#sticky-cta .cta-label { font-family:'Manrope',sans-serif; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.5); text-align:center; }
-.strava-btn { display:flex; align-items:center; gap:10px; background:#FC4C02; border:none; border-radius:4px; padding:12px 22px; cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:15px; color:white; }
-.strava-btn svg { width:20px; height:20px; }
+#sticky-cta{
+  position:fixed;bottom:0;right:0;width:590px;height:186px;
+  background:#000;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  cursor:pointer;z-index:10000;
+  transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)
+}
+#sticky-cta.visible{transform:translateX(0)}
+.cta-label{
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5)
+}
+.strava-btn{
+  display:flex;align-items:center;gap:10px;background:#FC4C02;
+  border:none;border-radius:4px;padding:12px 22px;cursor:pointer;
+  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;color:#fff
+}
+.strava-btn svg{width:20px;height:20px}
+
+/* ── OUTRO ── */
+#s-outro{
+  min-height:100vh;background:var(--good);
+  display:flex;flex-direction:column;position:relative;overflow:hidden
+}
+#s-outro::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)
+}
+.o-nav{position:relative;padding:28px 32px;z-index:1}
+.o-body{
+  flex:1;position:relative;z-index:1;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:40px 40px 40px 335px
+}
+.o-hl{
+  font-family:'Gabarito',sans-serif;font-weight:700;
+  font-size:clamp(52px,8vw,120px);line-height:0.93;color:#000
+}
+.o-sub{
+  margin-top:44px;font-family:'Manrope',sans-serif;
+  font-size:15px;line-height:1.65;color:rgba(0,0,0,0.65);max-width:400px
+}
 
 /* ── MODALS ── */
-#strava-modal,#consent-modal { position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s; }
-#strava-modal.open,#consent-modal.open { opacity:1; pointer-events:all; }
-.modal-box { background:#fff; width:480px; max-width:90vw; padding:48px 44px; position:relative; }
-.modal-close { position:absolute; top:20px; right:20px; background:none; border:none; cursor:pointer; font-size:20px; color:rgba(0,0,0,0.35); }
-.modal-title { font-family:'Gabarito',sans-serif; font-weight:700; font-size:36px; line-height:1; color:#000; margin-bottom:12px; }
-.modal-sub { font-family:'Manrope',sans-serif; font-size:14px; line-height:1.65; color:rgba(0,0,0,0.55); }
-.modal-avatar { width:64px; height:64px; border-radius:50%; object-fit:cover; display:block; margin-bottom:20px; }
-.modal-strava-badge { display:inline-flex; align-items:center; gap:6px; margin-top:24px; background:#FC4C02; border-radius:3px; padding:6px 12px; }
-.modal-strava-badge span { font-family:'Manrope',sans-serif; font-size:12px; font-weight:700; color:white; }
-.consent-list { list-style:none; margin:24px 0 0; padding:0; display:flex; flex-direction:column; gap:16px; }
-.consent-list li { display:flex; align-items:flex-start; gap:14px; font-family:'Manrope',sans-serif; font-size:14px; line-height:1.6; color:rgba(0,0,0,0.7); }
-.consent-icon { font-size:18px; flex-shrink:0; }
-.consent-list strong { color:#000; font-weight:700; }
-.consent-actions { display:flex; align-items:center; justify-content:flex-end; gap:12px; margin-top:32px; }
-.consent-cancel { background:none; border:none; cursor:pointer; font-family:'Manrope',sans-serif; font-size:14px; font-weight:600; color:rgba(0,0,0,0.4); padding:10px 16px; }
-.consent-confirm { display:flex; align-items:center; gap:8px; background:#FC4C02; border:none; border-radius:4px; padding:12px 20px; cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:14px; color:white; }
+.modal-overlay{
+  position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.3s
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:#fff;width:480px;max-width:90vw;padding:48px 44px;position:relative}
+.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;font-size:20px;color:rgba(0,0,0,0.4)}
+.modal-title{font-family:'Gabarito',sans-serif;font-weight:700;font-size:36px;line-height:1;color:#000;margin-bottom:12px}
+.modal-sub{font-family:'Manrope',sans-serif;font-size:14px;line-height:1.65;color:rgba(0,0,0,0.55)}
+.modal-avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;display:none;margin-bottom:20px}
+.modal-badge{display:inline-flex;align-items:center;gap:6px;margin-top:24px;background:#FC4C02;border-radius:3px;padding:6px 12px}
+.modal-badge span{font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#fff}
+.consent-list{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-direction:column;gap:16px}
+.consent-list li{display:flex;align-items:flex-start;gap:14px;font-family:'Manrope',sans-serif;font-size:14px;line-height:1.6;color:rgba(0,0,0,0.7)}
+.consent-list strong{color:#000;font-weight:700}
+.consent-icon{font-size:18px;flex-shrink:0}
+.consent-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:32px}
+.consent-cancel{background:none;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;color:rgba(0,0,0,0.4);padding:10px 16px}
+.consent-confirm{display:flex;align-items:center;gap:8px;background:#FC4C02;border:none;border-radius:4px;padding:12px 20px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#fff}
 
-/* ── MOBILE ── */
 @media(max-width:768px){
-  .htick.active{font-size:48px}
-  .metrics-grid{left:10px;top:auto;bottom:20px;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}
-  #runner-panel{left:0;top:0;width:100%;height:45vh;opacity:1}
-  .w-icon{left:16px;top:16px;bottom:auto;font-size:32px}
-  #sticky-cta{width:100%;height:80px;flex-direction:row;padding:0 20px;gap:16px}
+  .htick.active{font-size:44px}
+  .metrics-grid{left:8px;top:auto;bottom:16px;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}
+  #runner-panel{left:0;top:0;width:100%;height:44vh;opacity:1}
+  .w-icon{left:12px;top:12px;bottom:auto;font-size:28px}
+  #sticky-cta{width:100%;height:72px;flex-direction:row;padding:0 20px;gap:12px}
   .o-body{padding:24px 20px}
+  .h-bottom{padding-left:8px}
 }
 </style>
 </head>
@@ -125,36 +176,76 @@ html,body { width:100%; overflow-x:hidden; background:#fff; }
 <div id="scroll-track">
   <div id="sticky-panel">
 
+    <!-- INTRO LAYER -->
     <div id="p-intro">
       <nav class="i-nav"><div class="logo">WON</div></nav>
       <div id="i-headline">
         <div class="i-row">weather or</div>
-        <div class="i-row">not,&nbsp;&nbsp;<div class="sthumb"><div class="tt">10:00</div><video src="videos/video1.mp4" width="110" height="78" autoplay loop muted playsinline style="display:block;object-fit:cover;border-radius:5px;"></video></div>&nbsp;&nbsp;here</div>
-        <div class="i-row"><div id="zthumb"><div class="tt">10:00</div><video src="videos/runner.mp4" width="150" height="108" autoplay loop muted playsinline style="display:block;object-fit:cover;border-radius:5px;"></video></div>&nbsp;&nbsp;i come&nbsp;&nbsp;<div class="sthumb"><div class="tt">10:00</div><video src="videos/video2.mp4" width="128" height="92" autoplay loop muted playsinline style="display:block;object-fit:cover;border-radius:5px;"></video></div></div>
+        <div class="i-row">
+          not,&nbsp;
+          <div class="vid-thumb">
+            <div class="tt">10:00</div>
+            <video src="videos/video1.mp4" width="110" height="78" autoplay loop muted playsinline></video>
+          </div>
+          &nbsp;here
+        </div>
+        <div class="i-row">
+          <div id="zthumb">
+            <div class="tt">10:00</div>
+            <video src="videos/runner.mp4" width="148" height="106" autoplay loop muted playsinline></video>
+          </div>
+          &nbsp;i come&nbsp;
+          <div class="vid-thumb">
+            <div class="tt">10:00</div>
+            <video src="videos/video2.mp4" width="126" height="90" autoplay loop muted playsinline></video>
+          </div>
+        </div>
       </div>
       <div id="scroll-cue">scroll</div>
     </div>
 
+    <!-- HOURS LAYER -->
     <div id="p-hours">
       <div class="h-bg" id="hBg"></div>
-      <div id="weather-pattern"></div>
       <div class="h-nav"><div class="logo">WON</div></div>
       <div class="hours-col" id="hoursCol"></div>
-      <div class="w-icon" id="wIcon">☁️</div>
+      <div class="w-icon" id="wIcon">&#x2601;&#xFE0F;</div>
       <div class="metrics-grid">
-        <div class="mcell"><div class="mlrow"><div class="mdot"></div><div class="mlabel">real feel <em>c°</em></div></div><div class="mval" id="mFeel">3<span class="munit">°</span></div></div>
-        <div class="mcell"><div class="mlrow"><div class="mdot"></div><div class="mlabel">real temp <em>c°</em></div></div><div class="mval" id="mTemp">6<span class="munit">°</span></div></div>
-        <div class="mcell"><div class="mlrow"><div class="mdot"></div><div class="mlabel">wind <em>km/h</em></div></div><div class="mval" id="mWind">16<span class="munit">W</span></div></div>
-        <div class="mcell"><div class="mlrow"><div class="mdot"></div><div class="mlabel">gusts <em>km/h</em></div></div><div class="mval" id="mGust">27<span class="munit">W</span></div></div>
-        <div class="mcell"><div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>%</em></div></div><div class="mval" id="mRainPct">23</div></div>
-        <div class="mcell"><div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>mm</em></div></div><div class="mval" id="mRainMm">0.6</div></div>
+        <div class="mcell">
+          <div class="mlrow"><div class="mdot"></div><div class="mlabel">real feel <em>c&#xB0;</em></div></div>
+          <div class="mval" id="mFeel">3<span class="munit">&#xB0;</span></div>
+        </div>
+        <div class="mcell">
+          <div class="mlrow"><div class="mdot"></div><div class="mlabel">real temp <em>c&#xB0;</em></div></div>
+          <div class="mval" id="mTemp">6<span class="munit">&#xB0;</span></div>
+        </div>
+        <div class="mcell">
+          <div class="mlrow"><div class="mdot"></div><div class="mlabel">wind <em>km/h</em></div></div>
+          <div class="mval" id="mWind">16<span class="munit">W</span></div>
+        </div>
+        <div class="mcell">
+          <div class="mlrow"><div class="mdot"></div><div class="mlabel">gusts <em>km/h</em></div></div>
+          <div class="mval" id="mGust">27<span class="munit">W</span></div>
+        </div>
+        <div class="mcell">
+          <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>%</em></div></div>
+          <div class="mval" id="mRainPct">23</div>
+        </div>
+        <div class="mcell">
+          <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>mm</em></div></div>
+          <div class="mval" id="mRainMm">0.6</div>
+        </div>
       </div>
-      <div id="runner-panel"><video id="runnerImg" src="videos/runner.mp4" autoplay loop muted playsinline></video></div>
-      <div class="h-bottom"><div class="h-tagline">the best time slots for you<br>to hit the ground running</div></div>
+      <div id="runner-panel">
+        <video id="runnerVid" src="videos/runner.mp4" autoplay loop muted playsinline></video>
+      </div>
+      <div class="h-bottom">
+        <div class="h-tagline">the best time slots for you<br>to hit the ground running</div>
+      </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /sticky-panel -->
+</div><!-- /scroll-track -->
 
 <section id="s-outro">
   <nav class="o-nav"><div class="logo">WON</div></nav>
@@ -165,11 +256,12 @@ html,body { width:100%; overflow-x:hidden; background:#fff; }
   <div style="height:186px"></div>
 </section>
 
+<!-- Zoom overlay (outside scroll-track so it's truly fixed) -->
 <div id="zoom-overlay">
-  <div class="zt-label" id="ztLabel">10:00</div>
-  <video src="videos/runner.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+  <video src="videos/runner.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block"></video>
 </div>
 
+<!-- Sticky CTA -->
 <div id="sticky-cta">
   <div class="cta-label">apply for beta</div>
   <button class="strava-btn" id="stravaBtn">
@@ -178,15 +270,16 @@ html,body { width:100%; overflow-x:hidden; background:#fff; }
   </button>
 </div>
 
-<div id="consent-modal">
+<!-- Consent modal -->
+<div id="consent-modal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" id="consentClose">&#x2715;</button>
     <div class="modal-title">before you connect</div>
-    <div class="modal-sub">To join the WON beta, you'll connect your Strava account. Here's exactly what that means:</div>
+    <div class="modal-sub">To join the WON beta, connect your Strava account. Here's what that means:</div>
     <ul class="consent-list">
       <li><span class="consent-icon">&#x1F464;</span><span>We read your <strong>public Strava profile</strong> (name, photo, city) to add you to the waitlist.</span></li>
-      <li><span class="consent-icon">&#x270D;&#xFE0F;</span><span>We'll automatically add a short line to your <strong>future activity descriptions</strong>.</span></li>
-      <li><span class="consent-icon">&#x1F512;</span><span>We <strong>never</strong> read your private activities, GPS data, or health information.</span></li>
+      <li><span class="consent-icon">&#x270D;&#xFE0F;</span><span>We'll add a short line to your <strong>future activity descriptions</strong> mentioning WON.</span></li>
+      <li><span class="consent-icon">&#x1F512;</span><span>We <strong>never</strong> access private activities, GPS data, or health information.</span></li>
     </ul>
     <div class="consent-actions">
       <button class="consent-cancel" id="consentCancel">cancel</button>
@@ -198,13 +291,14 @@ html,body { width:100%; overflow-x:hidden; background:#fff; }
   </div>
 </div>
 
-<div id="strava-modal">
+<!-- Success modal -->
+<div id="strava-modal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">&#x2715;</button>
-    <img class="modal-avatar" id="modalAvatar" src="" alt="" style="display:none"/>
+    <img class="modal-avatar" id="modalAvatar" src="" alt="">
     <div class="modal-title">you're in.</div>
-    <div class="modal-sub">Welcome <strong id="modalName"></strong> &#x2014; you're on the WON beta waitlist.</div>
-    <div class="modal-strava-badge">
+    <div class="modal-sub">Welcome <strong id="modalName"></strong> &#x2014; you're on the WON beta waitlist. We'll reach out when your spot is ready.</div>
+    <div class="modal-badge">
       <svg viewBox="0 0 24 24" fill="white" width="16" height="16"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0 5 13.828h4.172"/></svg>
       <span>Connected via Strava</span>
     </div>
@@ -212,8 +306,9 @@ html,body { width:100%; overflow-x:hidden; background:#fff; }
 </div>
 
 <script>
-const POOR='#fd9363', FAIR='#f5c842', GOOD='#83e9d0';
-const HOURS=[
+// ── DATA ──────────────────────────────────────────────────────────────
+var POOR='#fd9363',FAIR='#f5c842',GOOD='#83e9d0';
+var HOURS=[
   {label:'06:00',feel:-2,temp:2, wind:18,gust:30,rainPct:10,rainMm:'0.1',score:42,icon:'&#x2601;&#xFE0F;'},
   {label:'08:00',feel:1, temp:4, wind:14,gust:25,rainPct:5, rainMm:'0.0',score:63,icon:'&#x26C5;'},
   {label:'10:00',feel:3, temp:6, wind:16,gust:27,rainPct:23,rainMm:'0.6',score:52,icon:'&#x1F327;&#xFE0F;'},
@@ -224,49 +319,42 @@ const HOURS=[
   {label:'20:00',feel:5, temp:7, wind:11,gust:19,rainPct:5, rainMm:'0.0',score:76,icon:'&#x26C5;'},
   {label:'22:00',feel:1, temp:4, wind:16,gust:24,rainPct:15,rainMm:'0.3',score:82,icon:'&#x1F319;'}
 ];
-const N=HOURS.length;
-const scoreColor=s=>s>=80?GOOD:s>=60?FAIR:POOR;
-const lerp=(a,b,t)=>a+(b-a)*t;
-const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
-const ease=t=>t<0.5?2*t*t:-1+(4-2*t)*t;
+var N=HOURS.length;
 
-// Build hours sidebar
-const hoursColEl=document.getElementById('hoursCol');
-HOURS.forEach((h,i)=>{
-  const el=document.createElement('div');
+function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
+function lerp(a,b,t){return a+(b-a)*t}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
+
+// ── BUILD HOURS SIDEBAR ───────────────────────────────────────────────
+var hoursColEl=document.getElementById('hoursCol');
+HOURS.forEach(function(h,i){
+  var el=document.createElement('div');
   el.className='htick'+(i===0?' active':'');
   el.textContent=h.label;
   hoursColEl.appendChild(el);
 });
 
-// Refs
-const zOverlay=document.getElementById('zoom-overlay');
-const ztLabel=document.getElementById('ztLabel');
-const zThumb=document.getElementById('zthumb');
-const hBg=document.getElementById('hBg');
-const wIconEl=document.getElementById('wIcon');
-const wxPat=document.getElementById('weather-pattern');
-const runnerImg=document.getElementById('runnerImg');
-const mFeel=document.getElementById('mFeel');
-const mTemp=document.getElementById('mTemp');
-const mWind=document.getElementById('mWind');
-const mGust=document.getElementById('mGust');
-const mRainPct=document.getElementById('mRainPct');
-const mRainMm=document.getElementById('mRainMm');
-const stickyCta=document.getElementById('sticky-cta');
-const pIntro=document.getElementById('p-intro');
-let startRect=null;
-let lastIdx=-1;
+// ── REFS ──────────────────────────────────────────────────────────────
+var zOverlay=document.getElementById('zoom-overlay');
+var zThumb=document.getElementById('zthumb');
+var hBg=document.getElementById('hBg');
+var wIconEl=document.getElementById('wIcon');
+var runnerVid=document.getElementById('runnerVid');
+var runnerPanel=document.getElementById('runner-panel');
+var pIntro=document.getElementById('p-intro');
+var stickyCta=document.getElementById('sticky-cta');
+var startRect=null;
+var lastIdx=-1;
 
-function isMobile(){return window.innerWidth<=768;}
-
+// ── ZOOM ──────────────────────────────────────────────────────────────
 function captureStart(){
-  const r=zThumb.getBoundingClientRect();
+  var r=zThumb.getBoundingClientRect();
   startRect={left:r.left,top:r.top,width:r.width,height:r.height};
 }
 
 function endRect(){
-  if(isMobile()) return{left:0,top:0,width:window.innerWidth,height:Math.round(window.innerHeight*0.45)};
+  if(window.innerWidth<=768) return{left:0,top:0,width:window.innerWidth,height:Math.round(window.innerHeight*0.44)};
   return{left:534,top:85,width:611,height:786};
 }
 
@@ -274,17 +362,17 @@ function applyZoom(p){
   if(p<=0){
     zOverlay.style.opacity='0';
     zThumb.classList.remove('hidden');
+    runnerPanel.style.opacity='0';
+    return;
+  }
+  if(p>=1){
+    zOverlay.style.opacity='0';
+    runnerPanel.style.opacity='1';
     return;
   }
   if(!startRect) captureStart();
-  const er=endRect();
-  const t=ease(clamp(p,0,1));
-  if(p>=1){
-    zOverlay.style.opacity='0';
-    document.getElementById('runner-panel').style.opacity='1';
-    return;
-  }
-  document.getElementById('runner-panel').style.opacity='0';
+  var er=endRect();
+  var t=ease(clamp(p,0,1));
   zThumb.classList.add('hidden');
   zOverlay.style.opacity='1';
   zOverlay.style.left=lerp(startRect.left,er.left,t)+'px';
@@ -292,103 +380,115 @@ function applyZoom(p){
   zOverlay.style.width=lerp(startRect.width,er.width,t)+'px';
   zOverlay.style.height=lerp(startRect.height,er.height,t)+'px';
   zOverlay.style.borderRadius=lerp(6,0,t)+'px';
+  runnerPanel.style.opacity='0';
 }
 
+// ── HOUR UPDATE ───────────────────────────────────────────────────────
 function flip(el,html){
-  el.classList.remove('flip');void el.offsetWidth;el.innerHTML=html;el.classList.add('flip');
+  el.classList.remove('flip');
+  void el.offsetWidth;
+  el.innerHTML=html;
+  el.classList.add('flip');
 }
 
 function updateHour(idx){
   if(idx===lastIdx) return;
   lastIdx=idx;
-  const h=HOURS[idx];
+  var h=HOURS[idx];
   hBg.style.background=scoreColor(h.score);
   wIconEl.innerHTML=h.icon;
-  const patSrc=h.score<60?'images/pattern-poor.svg':h.score<80?'images/pattern-fair.svg':'images/pattern-good.svg';
-  wxPat.innerHTML='<img src="'+patSrc+'" style="width:100%;height:100%;display:block;"/>';
-  flip(mFeel,h.feel+'<span class="munit">&#xB0;</span>');
-  flip(mTemp,h.temp+'<span class="munit">&#xB0;</span>');
-  flip(mWind,h.wind+'<span class="munit">W</span>');
-  flip(mGust,h.gust+'<span class="munit">W</span>');
-  flip(mRainPct,h.rainPct+'');
-  flip(mRainMm,h.rainMm+'');
-  document.querySelectorAll('.htick').forEach((el,i)=>el.classList.toggle('active',i===idx));
-  runnerImg.style.transform='scale('+(1+(idx/(N-1))*0.38)+')';
+  flip(document.getElementById('mFeel'),h.feel+'<span class="munit">&#xB0;</span>');
+  flip(document.getElementById('mTemp'),h.temp+'<span class="munit">&#xB0;</span>');
+  flip(document.getElementById('mWind'),h.wind+'<span class="munit">W</span>');
+  flip(document.getElementById('mGust'),h.gust+'<span class="munit">W</span>');
+  flip(document.getElementById('mRainPct'),String(h.rainPct));
+  flip(document.getElementById('mRainMm'),String(h.rainMm));
+  document.querySelectorAll('.htick').forEach(function(el,i){
+    el.classList.toggle('active',i===idx);
+  });
+  runnerVid.style.transform='scale('+(1+(idx/(N-1))*0.38)+')';
 }
 
+// ── SCROLL ───────────────────────────────────────────────────────────
 function setSectionHeights(){
-  const vh=window.innerHeight;
-  // scroll-track height = 2vh (intro+zoom) + N*vh (one per hour)
+  var vh=window.innerHeight;
   document.getElementById('scroll-track').style.height=(vh*(2+N))+'px';
 }
 
 function onScroll(){
-  const sy=window.scrollY;
-  const vh=window.innerHeight;
+  var sy=window.scrollY;
+  var vh=window.innerHeight;
 
-  // Phase A: intro (0 to vh)
   if(sy<=vh){
+    // Phase A: intro
     captureStart();
     applyZoom(0);
     pIntro.style.opacity='1';
     pIntro.style.pointerEvents='';
+    return;
   }
 
-  // Phase B: zoom (vh to 2vh)
-  if(sy>vh && sy<vh*2){
-    const p=(sy-vh)/vh;
+  if(sy<vh*2){
+    // Phase B: zoom transition
+    var p=(sy-vh)/vh;
     applyZoom(p);
-    pIntro.style.opacity=String(clamp(1-p*2,0,1));
-    pIntro.style.pointerEvents=p>0.5?'none':'';
+    pIntro.style.opacity=String(clamp(1-p*2.5,0,1));
+    pIntro.style.pointerEvents=p>0.4?'none':'';
+    return;
   }
 
-  // Phase C: hours (2vh+)
-  if(sy>=vh*2){
-    applyZoom(1);
-    pIntro.style.opacity='0';
-    pIntro.style.pointerEvents='none';
-    const idx=clamp(Math.floor((sy-vh*2)/vh),0,N-1);
-    updateHour(idx);
-  }
-
-  stickyCta.classList.toggle('visible',sy>=vh*2);
+  // Phase C: hours
+  applyZoom(1);
+  pIntro.style.opacity='0';
+  pIntro.style.pointerEvents='none';
+  var idx=clamp(Math.floor((sy-vh*2)/vh),0,N-1);
+  updateHour(idx);
+  stickyCta.classList.add('visible');
 }
 
 setSectionHeights();
-window.addEventListener('resize',()=>{setSectionHeights();captureStart();onScroll();});
+window.addEventListener('resize',function(){setSectionHeights();captureStart();});
 window.addEventListener('scroll',onScroll,{passive:true});
 updateHour(0);
-setTimeout(()=>{captureStart();},200);
+setTimeout(captureStart,200);
 
-// Strava
-const STRAVA_CLIENT_ID='YOUR_CLIENT_ID';
-document.getElementById('stravaBtn').addEventListener('click',()=>document.getElementById('consent-modal').classList.add('open'));
-document.getElementById('consentClose').addEventListener('click',()=>document.getElementById('consent-modal').classList.remove('open'));
-document.getElementById('consentCancel').addEventListener('click',()=>document.getElementById('consent-modal').classList.remove('open'));
-document.getElementById('consent-modal').addEventListener('click',e=>{if(e.target===document.getElementById('consent-modal'))document.getElementById('consent-modal').classList.remove('open');});
-document.getElementById('consentConfirm').addEventListener('click',()=>{
-  document.getElementById('consent-modal').classList.remove('open');
-  const p=new URLSearchParams({client_id:STRAVA_CLIENT_ID,redirect_uri:window.location.origin+window.location.pathname,response_type:'code',approval_prompt:'auto',scope:'read,activity:write'});
+// ── STRAVA ───────────────────────────────────────────────────────────
+var CLIENT_ID='YOUR_CLIENT_ID';
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+document.getElementById('stravaBtn').addEventListener('click',function(){openModal('consent-modal')});
+document.getElementById('consentClose').addEventListener('click',function(){closeModal('consent-modal')});
+document.getElementById('consentCancel').addEventListener('click',function(){closeModal('consent-modal')});
+document.getElementById('consent-modal').addEventListener('click',function(e){if(e.target===this)closeModal('consent-modal')});
+document.getElementById('consentConfirm').addEventListener('click',function(){
+  closeModal('consent-modal');
+  var p=new URLSearchParams({
+    client_id:CLIENT_ID,
+    redirect_uri:window.location.origin+window.location.pathname,
+    response_type:'code',approval_prompt:'auto',scope:'read,activity:write'
+  });
   window.location.href='https://www.strava.com/oauth/authorize?'+p;
 });
-(async function(){
-  const params=new URLSearchParams(window.location.search);
-  const code=params.get('code');
-  if(params.get('error')||!code){window.history.replaceState({},'',window.location.pathname);return;}
+document.getElementById('modalClose').addEventListener('click',function(){closeModal('strava-modal')});
+document.getElementById('strava-modal').addEventListener('click',function(e){if(e.target===this)closeModal('strava-modal')});
+
+(function handleCallback(){
+  var params=new URLSearchParams(window.location.search);
+  var code=params.get('code');
+  if(!code) return;
   window.history.replaceState({},'',window.location.pathname);
-  try{
-    const res=await fetch('/.netlify/functions/strava-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
-    if(!res.ok) throw new Error('Auth failed');
-    const a=await res.json();
+  fetch('/.netlify/functions/strava-auth',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({code:code})
+  }).then(function(r){return r.json()}).then(function(a){
     document.getElementById('modalName').textContent=a.firstname+' '+a.lastname;
-    const av=document.getElementById('modalAvatar');
-    if(a.profile_medium){av.src=a.profile_medium;av.style.display='block';}
-    document.getElementById('strava-modal').classList.add('open');
-  }catch(e){console.error('Strava auth error:',e);}
+    var av=document.getElementById('modalAvatar');
+    if(a.profile_medium){av.src=a.profile_medium;av.style.display='block'}
+    openModal('strava-modal');
+  }).catch(function(e){console.error('Auth error:',e)});
 })();
-document.getElementById('modalClose').addEventListener('click',()=>document.getElementById('strava-modal').classList.remove('open'));
-document.getElementById('strava-modal').addEventListener('click',e=>{if(e.target===document.getElementById('strava-modal'))document.getElementById('strava-modal').classList.remove('open');});
 </script>
-<!-- v17 -->
 </body>
 </html>
