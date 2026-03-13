@@ -8,12 +8,12 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --poor: #fd9363; --fair: #f5c842; --good: #83e9d0; --black: #000; --white: #fff; }
-html, body { width: 100%; overflow-x: hidden; background: var(--white); }
+html { width: 100%; overflow-x: hidden; background: var(--white); } body { width: 100%; overflow-x: hidden; background: var(--white); min-height: 100%; }
 #app { width: 100%; }
 .logo { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: -1px; color: var(--black); }
 
 /* INTRO */
-#s-intro { height: 200px; position: relative; }
+#s-intro { height: 200px; position: relative; overflow: visible; }
 #p-intro { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; background: var(--white); z-index: 2; } #s-intro { overflow: visible; }
 .i-nav { position: absolute; top: 24px; left: 20px; z-index: 20; }
 #i-headline {
