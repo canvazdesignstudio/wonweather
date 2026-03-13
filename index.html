@@ -52,7 +52,7 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
 }
 
 /* ── HOURS LAYER ── */
-#p-hours{position:absolute;inset:0;z-index:1;background:var(--poor)}
+#p-hours{position:absolute;inset:0;z-index:1;background:var(--poor);opacity:0;transition:opacity 0.3s}
 .h-bg{position:absolute;inset:0;background:var(--poor);transition:background 0.5s ease;z-index:0}
 #p-hours::after{
   content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -426,6 +426,7 @@ function onScroll(){
     applyZoom(0);
     pIntro.style.opacity='1';
     pIntro.style.pointerEvents='';
+    document.getElementById('p-hours').style.opacity='0';
     return;
   }
 
@@ -442,6 +443,7 @@ function onScroll(){
   applyZoom(1);
   pIntro.style.opacity='0';
   pIntro.style.pointerEvents='none';
+  document.getElementById('p-hours').style.opacity='1';
   document.getElementById('p-hours').style.zIndex='20';
   var idx=clamp(Math.floor((sy-vh*2)/vh),0,N-1);
   updateHour(idx);
