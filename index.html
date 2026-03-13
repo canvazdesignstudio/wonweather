@@ -447,6 +447,7 @@ function onScroll(){
 }
 
 setSectionHeights();
+window.scrollTo(0,0);
 window.addEventListener('resize',function(){setSectionHeights();captureStart();});
 window.addEventListener('scroll',onScroll,{passive:true});
 updateHour(0);
