@@ -8,13 +8,13 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --poor: #fd9363; --fair: #f5c842; --good: #83e9d0; --black: #000; --white: #fff; }
-html { width: 100%; overflow-x: hidden; background: var(--white); } body { width: 100%; overflow-x: hidden; background: var(--white); min-height: 100%; }
+html, body { width: 100%; overflow-x: hidden; background: var(--white); }
 #app { width: 100%; }
 .logo { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: -1px; color: var(--black); }
 
 /* INTRO */
-#s-intro { height: 200px; position: relative; overflow: visible; }
-#p-intro { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; background: var(--white); z-index: 2; } #s-intro { overflow: visible; }
+#s-intro { height: 200px; position: relative; }
+#p-intro { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; background: var(--white); z-index: 2; }
 .i-nav { position: absolute; top: 24px; left: 20px; z-index: 20; }
 #i-headline {
   position: absolute; inset: 0;
@@ -44,7 +44,7 @@ html { width: 100%; overflow-x: hidden; background: var(--white); } body { width
 .zt-label { position: absolute; top: -18px; left: 0; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 11px; color: var(--black); }
 
 /* HOURS */
-#s-hours { height: 900px; position: relative; overflow: visible; }
+#s-hours { height: 900px; position: relative; }
 #p-hours { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; z-index: 1; }
 .h-bg { position: absolute; inset: 0; background: var(--poor); transition: background 0.55s ease; z-index: 0; }
 #p-hours::after { content: ''; position: absolute; inset: 0; z-index: 1; background-image: repeating-linear-gradient(-45deg, transparent 0, transparent 18px, rgba(0,0,0,0.025) 18px, rgba(0,0,0,0.025) 19px); pointer-events: none; }
