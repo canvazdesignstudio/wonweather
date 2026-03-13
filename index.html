@@ -7,533 +7,131 @@
 <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --poor: #fd9363; --fair: #f5c842; --good: #83e9d0; --black: #000; --white: #fff; }
+html, body { width: 100%; overflow-x: hidden; background: var(--white); }
+#app { width: 100%; }
+.logo { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: -1px; color: var(--black); }
 
-:root {
-  --poor: #fd9363;
-  --fair: #f5c842;
-  --good: #83e9d0;
-  --black: #000;
-  --white: #fff;
-}
-
-html, body {
-  width: 100%; height: 100%;
-  overflow-x: hidden;
-  background: var(--white);
-}
-
-#app {
-  width: 100%;
-}
-
-.logo {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 900; font-size: 20px;
-  letter-spacing: -1px; color: var(--black);
-}
-
-/* ═══════════════════════════════════════════════
-   SECTION 1 — INTRO
-═══════════════════════════════════════════════ */
-#s-intro { height: 200px; position: relative; } /* height set by JS */
-
-#p-intro {
-  position: sticky; top: 0;
-  height: 100vh; width: 100%;
-  overflow: hidden; background: var(--white); z-index: 2;
-}
-
-.i-nav {
-  position: absolute; top: 24px; left: 20px; z-index: 20;
-  will-change: opacity; transition: opacity 0.2s;
-}
-
+/* INTRO */
+#s-intro { height: 200px; position: relative; }
+#p-intro { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; background: var(--white); z-index: 2; }
+.i-nav { position: absolute; top: 24px; left: 20px; z-index: 20; }
 #i-headline {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 2px;
+  align-items: center; justify-content: center; gap: 8px;
   font-family: 'Gabarito', sans-serif; font-weight: 700;
   font-size: clamp(32px, 7.2vw, 104px);
   line-height: 1.05; color: var(--black);
-  z-index: 10; pointer-events: none;
-  will-change: opacity; transition: opacity 0.1s;
-  padding: 0 16px;
+  z-index: 10; padding: 0 16px;
 }
 .i-row { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 1.5vw, 14px); }
-
-.ch { display: inline; opacity: 1; position: relative; top: 0; transition: opacity 0.06s, top 0.1s; }
-.ch.anim { opacity: 0; top: 10px; }
-.ch.anim.on { opacity: 1; top: 0; }
-
-.cursor {
-  display: inline-block; width: 4px; height: 0.8em;
-  background: var(--black); vertical-align: middle; margin-left: 2px;
-  animation: blink 0.65s step-end infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
-.sthumb {
-  display: inline-flex; flex-direction: column; flex-shrink: 0;
-  opacity: 1; transform: scale(1) rotate(0deg);
-  transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34,1.5,0.64,1);
-}
-.sthumb.anim { opacity: 0; transform: scale(0.55) rotate(-5deg); }
-.sthumb.anim.on { opacity: 1; transform: scale(1) rotate(0deg); }
-.sthumb .tt {
-  font-family: 'Manrope', sans-serif; font-weight: 700;
-  font-size: clamp(8px, 1.5vw, 11px); color: var(--black); margin-bottom: 2px;
-}
-.sthumb img { border-radius: 5px; object-fit: cover; display: block; }
-
-#zthumb {
-  display: inline-flex; flex-direction: column; flex-shrink: 0;
-  opacity: 1; transform: scale(1) rotate(0deg);
-  transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34,1.5,0.64,1);
-}
-#zthumb.anim { opacity: 0; transform: scale(0.55) rotate(-5deg); }
-#zthumb.anim.on { opacity: 1; transform: scale(1) rotate(0deg); }
-#zthumb.hidden { opacity: 0 !important; transition: none; }
-#zthumb .tt {
-  font-family: 'Manrope', sans-serif; font-weight: 700;
-  font-size: clamp(8px, 1.5vw, 11px); color: var(--black); margin-bottom: 2px;
-}
-#zthumb img { border-radius: 5px; object-fit: cover; display: block; }
-
+.sthumb { display: inline-flex; flex-direction: column; flex-shrink: 0; }
+.sthumb .tt { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 11px; color: var(--black); margin-bottom: 2px; }
+#zthumb { display: inline-flex; flex-direction: column; flex-shrink: 0; }
+#zthumb.hidden { opacity: 0 !important; }
+#zthumb .tt { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 11px; color: var(--black); margin-bottom: 2px; }
 #scroll-cue {
-  position: absolute; bottom: 28px; left: 50%;
-  transform: translateX(-50%);
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 8px;
   font-family: 'Manrope', sans-serif; font-size: 9px; font-weight: 700;
-  letter-spacing: 3px; text-transform: uppercase; color: rgba(0,0,0,0.3);
-  z-index: 20; opacity: 1;
+  letter-spacing: 3px; text-transform: uppercase; color: rgba(0,0,0,0.3); z-index: 20;
 }
-#scroll-cue::after {
-  content: ''; display: block; width: 1px; height: 36px; background: rgba(0,0,0,0.2);
-  animation: gl 1.5s 4s ease-in-out infinite;
-}
-@keyframes fi { to { opacity: 1; } }
-@keyframes gl { 0%,100% { transform: scaleY(0.1); opacity:0.2; } 50% { transform:scaleY(1); opacity:1; } }
+#scroll-cue::after { content: ''; display: block; width: 1px; height: 36px; background: rgba(0,0,0,0.2); }
 
-/* ═══════════════════════════════════════════════
-   ZOOM OVERLAY
-═══════════════════════════════════════════════ */
-#zoom-overlay {
-  position: fixed; z-index: 9999;
-  overflow: hidden; border-radius: 6px;
-  pointer-events: none; opacity: 0;
-  will-change: left, top, width, height;
-}
-#zoom-overlay .zt-label {
-  position: absolute; top: -18px; left: 0;
-  font-family: 'Manrope', sans-serif; font-weight: 700;
-  font-size: 11px; color: var(--black); white-space: nowrap;
-}
-#zoom-overlay img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
+/* ZOOM OVERLAY */
+#zoom-overlay { position: fixed; z-index: 9999; overflow: hidden; border-radius: 6px; pointer-events: none; opacity: 0; }
+.zt-label { position: absolute; top: -18px; left: 0; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 11px; color: var(--black); }
 
-/* ═══════════════════════════════════════════════
-   SECTION 2 — HOURLY
-═══════════════════════════════════════════════ */
-#s-hours { height: 900px; position: relative; } /* height set by JS: 9 × innerHeight */
-
-#p-hours {
-  position: sticky; top: 0;
-  height: 100vh; width: 100%;
-  overflow: hidden; z-index: 1;
-}
-
-.h-bg {
-  position: absolute; inset: 0;
-  background: var(--poor); transition: background 0.55s ease;
-  z-index: 0;
-}
-
-/* Full-bleed diagonal hatch — subtle texture across whole panel */
-#p-hours::after {
-  content: ''; position: absolute; inset: 0; z-index: 1;
-  background-image: repeating-linear-gradient(
-    -45deg, transparent 0, transparent 18px,
-    rgba(0,0,0,0.025) 18px, rgba(0,0,0,0.025) 19px
-  );
-  pointer-events: none;
-}
-
-.h-nav {
-  position: absolute; top: 0; left: 0; right: 0;
-  padding: 20px 40px; display: flex; align-items: center; z-index: 20;
-}
-
-/* ── DESKTOP hours layout ── */
-.hours-col {
-  position: absolute; left: 52px; top: 131px; bottom: 190px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  font-family: 'Manrope', sans-serif; font-weight: 700; z-index: 10;
-}
-.htick {
-  font-size: 14px; color: rgba(0,0,0,0.12);
-  line-height: 1; white-space: nowrap;
-  transition: color 0.3s, font-size 0.25s ease;
-}
+/* HOURS */
+#s-hours { height: 900px; position: relative; }
+#p-hours { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; z-index: 1; }
+.h-bg { position: absolute; inset: 0; background: var(--poor); transition: background 0.55s ease; z-index: 0; }
+#p-hours::after { content: ''; position: absolute; inset: 0; z-index: 1; background-image: repeating-linear-gradient(-45deg, transparent 0, transparent 18px, rgba(0,0,0,0.025) 18px, rgba(0,0,0,0.025) 19px); pointer-events: none; }
+.h-nav { position: absolute; top: 0; left: 0; right: 0; padding: 20px 40px; display: flex; align-items: center; z-index: 20; }
+.hours-col { position: absolute; left: 52px; top: 131px; bottom: 190px; display: flex; flex-direction: column; justify-content: space-between; font-family: 'Manrope', sans-serif; font-weight: 700; z-index: 10; }
+.htick { font-size: 14px; color: rgba(0,0,0,0.12); line-height: 1; white-space: nowrap; transition: color 0.3s, font-size 0.25s ease; }
 .htick.active { font-size: 80px; color: var(--black); line-height: 0.85; }
-
-.metrics-grid {
-  position: absolute; left: 270px; top: 90px;
-  display: grid;
-  grid-template-columns: 175px 175px;
-  grid-template-rows: 205px 205px 205px;
-  z-index: 10;
-}
+.metrics-grid { position: absolute; left: 270px; top: 90px; display: grid; grid-template-columns: 175px 175px; grid-template-rows: 205px 205px 205px; z-index: 10; }
 .mcell { display: flex; flex-direction: column; justify-content: center; padding: 0 0 0 20px; }
 .mlrow { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
-.mdot  { width: 8px; height: 8px; border-radius: 50%; background: var(--black); flex-shrink: 0; }
+.mdot { width: 8px; height: 8px; border-radius: 50%; background: var(--black); flex-shrink: 0; }
 .mlabel { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--black); }
 .mlabel em { font-style: normal; font-weight: 400; color: rgba(0,0,0,0.5); }
-.mval { font-family: 'Gabarito', sans-serif; font-weight: 700; font-size: 64px; line-height: 1; color: #020202; letter-spacing: 1.3px; }
+.mval { font-family: 'Gabarito', sans-serif; font-weight: 700; font-size: 64px; line-height: 1; color: #020202; }
 .munit { font-size: 26px; }
 @keyframes flipIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 .mval.flip { animation: flipIn 0.22s ease forwards; }
-
-/*
-  Weather pattern overlay — top-right corner, changes per score.
-  Drawn as inline SVG by JS. Positioned over the image + background right half.
-
-  POOR  (score<60):  tight diagonal straight lines (-45deg)
-  FAIR  (score<80):  wavy horizontal lines
-  GOOD  (score≥80):  sunburst radiating from a centre point
-*/
-#weather-pattern {
-  position: absolute;
-  right: 0; top: 0;
-  width: 650px; height: 650px;
-  z-index: 9; /* above image (6) and hatch (8), below UI (10) */
-  pointer-events: none;
-  overflow: visible;
-  transition: opacity 0.4s ease;
-}
-#weather-pattern svg {
-  width: 100%; height: 100%;
-  overflow: visible;
-}
-
-/*
-  Runner image: floating absolute rect matching Figma exactly.
-  left:534px, top:85px, width:611px, height:786px
-  Sits at z-index 6 — above bg (0) but below hatch (8) and UI (10+)
-  Starts invisible; only shown once zoom overlay has completed.
-*/
-#runner-panel {
-  position: absolute;
-  left: 534px; top: 85px;
-  width: 611px; height: 786px;
-  overflow: hidden; z-index: 6;
-  opacity: 0; /* hidden until zoom arrives */
-  transition: opacity 0s; /* instant — JS controls this */
-}
-#runner-panel video {
-  width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
-  display: block; transform-origin: bottom center;
-  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
-}
-
+#weather-pattern { position: absolute; right: 0; top: 0; width: 650px; height: 650px; z-index: 9; pointer-events: none; overflow: visible; }
+#runner-panel { position: absolute; left: 534px; top: 85px; width: 611px; height: 786px; overflow: hidden; z-index: 6; opacity: 0; }
+#runner-panel video { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
 .w-icon { position: absolute; left: 280px; bottom: 232px; font-size: 46px; line-height: 1; z-index: 10; }
+.h-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 186px; display: flex; align-items: stretch; z-index: 20; }
+.h-tagline { flex: 1; display: flex; align-items: center; padding-left: 270px; font-family: 'Manrope', sans-serif; font-size: 15px; line-height: 1.65; color: var(--black); }
 
-.h-bottom {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 186px;
-  display: flex; align-items: stretch; z-index: 20;
-}
-.h-tagline {
-  flex: 1; display: flex; align-items: center; padding-left: 270px;
-  font-family: 'Manrope', sans-serif; font-size: 15px; line-height: 1.65; color: var(--black);
-}
-
-/* ═══════════════════════════════════════════════
-   STICKY CTA — Strava OAuth button
-═══════════════════════════════════════════════ */
-#sticky-cta {
-  position: fixed;
-  bottom: 0; right: 0;
-  width: 590px; height: 186px;
-  background: var(--black);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; padding: 0 50px;
-  cursor: pointer; z-index: 10000;
-  transform: translateX(100%);
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  text-decoration: none;
-}
+/* STICKY CTA */
+#sticky-cta { position: fixed; bottom: 0; right: 0; width: 590px; height: 186px; background: var(--black); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 50px; cursor: pointer; z-index: 10000; transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); }
 #sticky-cta.visible { transform: translateX(0); }
-#sticky-cta .cta-label {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700; font-size: 13px;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  text-align: center;
-}
-#sticky-cta .strava-btn {
-  display: flex; align-items: center; gap: 10px;
-  background: #FC4C02; /* Strava orange */
-  border: none; border-radius: 4px;
-  padding: 12px 22px; cursor: pointer;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700; font-size: 15px;
-  color: white; white-space: nowrap;
-  transition: background 0.2s;
-}
+#sticky-cta .cta-label { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); text-align: center; }
+#sticky-cta .strava-btn { display: flex; align-items: center; gap: 10px; background: #FC4C02; border: none; border-radius: 4px; padding: 12px 22px; cursor: pointer; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; color: white; transition: background 0.2s; }
 #sticky-cta .strava-btn:hover { background: #e04400; }
-#sticky-cta .strava-btn svg {
-  width: 20px; height: 20px; flex-shrink: 0;
-}
+#sticky-cta .strava-btn svg { width: 20px; height: 20px; }
 
-/* ═══════════════════════════════════════════════
-   STRAVA MODAL — shown after successful auth
-═══════════════════════════════════════════════ */
-#strava-modal {
-  position: fixed; inset: 0; z-index: 99999;
-  background: rgba(0,0,0,0.7);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-#strava-modal.open { opacity: 1; pointer-events: all; }
-.modal-box {
-  background: var(--white);
-  width: 480px; max-width: 90vw;
-  padding: 48px 44px;
-  position: relative;
-}
-.modal-avatar {
-  width: 64px; height: 64px; border-radius: 50%;
-  object-fit: cover; display: block; margin-bottom: 20px;
-}
-.modal-title {
-  font-family: 'Gabarito', sans-serif;
-  font-weight: 700; font-size: 36px;
-  line-height: 1; color: var(--black);
-  margin-bottom: 12px;
-}
-.modal-sub {
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px; line-height: 1.65;
-  color: rgba(0,0,0,0.55);
-}
-.modal-sub strong { color: var(--black); font-weight: 700; }
-.modal-close {
-  position: absolute; top: 20px; right: 20px;
-  background: none; border: none; cursor: pointer;
-  font-size: 20px; color: rgba(0,0,0,0.35);
-  font-family: 'Manrope', sans-serif;
-  line-height: 1; padding: 4px;
-}
-.modal-close:hover { color: var(--black); }
-.modal-strava-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  margin-top: 24px; background: #FC4C02;
-  border-radius: 3px; padding: 6px 12px;
-}
-.modal-strava-badge svg { width: 16px; height: 16px; }
-.modal-strava-badge span {
-  font-family: 'Manrope', sans-serif;
-  font-size: 12px; font-weight: 700;
-  color: white; letter-spacing: 0.5px;
-}
-
-/* Consent modal specific styles */
-#consent-modal { z-index: 99998; } /* just below post-auth modal */
-
-.consent-list {
-  list-style: none;
-  margin: 24px 0 0 0; padding: 0;
-  display: flex; flex-direction: column; gap: 16px;
-}
-.consent-list li {
-  display: flex; align-items: flex-start; gap: 14px;
-  font-family: 'Manrope', sans-serif; font-size: 14px;
-  line-height: 1.6; color: rgba(0,0,0,0.7);
-}
-.consent-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.consent-list strong { color: var(--black); font-weight: 700; }
-.consent-list em {
-  font-style: normal; color: rgba(0,0,0,0.5);
-  font-size: 13px;
-}
-
-.consent-actions {
-  display: flex; align-items: center;
-  justify-content: flex-end; gap: 12px;
-  margin-top: 32px;
-}
-.consent-cancel {
-  background: none; border: none; cursor: pointer;
-  font-family: 'Manrope', sans-serif; font-size: 14px;
-  font-weight: 600; color: rgba(0,0,0,0.4);
-  padding: 10px 16px; border-radius: 3px;
-  transition: color 0.15s;
-}
-.consent-cancel:hover { color: var(--black); }
-.consent-confirm {
-  display: flex; align-items: center; gap: 8px;
-  background: #FC4C02; border: none; border-radius: 4px;
-  padding: 12px 20px; cursor: pointer;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 700; font-size: 14px; color: white;
-  transition: background 0.2s;
-}
-.consent-confirm:hover { background: #e04400; }
-
-/* ═══════════════════════════════════════════════
-   SECTION 3 — OUTRO
-═══════════════════════════════════════════════ */
-#s-outro {
-  min-height: 100vh; position: relative;
-  background: var(--good); overflow: hidden;
-  display: flex; flex-direction: column;
-}
-#s-outro::before {
-  content: ''; position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(
-    -45deg, transparent 0, transparent 10px,
-    rgba(0,0,0,0.04) 10px, rgba(0,0,0,0.04) 11px
-  );
-  pointer-events: none;
-}
+/* OUTRO */
+#s-outro { min-height: 100vh; position: relative; background: var(--good); overflow: hidden; display: flex; flex-direction: column; }
+#s-outro::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(-45deg, transparent 0, transparent 10px, rgba(0,0,0,0.04) 10px, rgba(0,0,0,0.04) 11px); pointer-events: none; }
 .o-nav { position: relative; padding: 28px 40px; z-index: 1; }
-.o-body {
-  flex: 1; position: relative; z-index: 1;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 40px 40px 40px 335px;
-}
+.o-body { flex: 1; position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 40px 40px 335px; }
 .o-hl { font-family: 'Gabarito', sans-serif; font-weight: 700; font-size: clamp(52px, 8vw, 120px); line-height: 0.93; color: var(--black); }
 .o-sub { margin-top: 44px; font-family: 'Manrope', sans-serif; font-size: 15px; line-height: 1.65; color: rgba(0,0,0,0.65); max-width: 400px; }
 
-/* ═══════════════════════════════════════════════
-   MOBILE — ≤ 768px
-   Layout switches from side-by-side → stacked.
-   Runner image moves to top half of screen.
-   Metrics in a 2×3 grid below, with active time big.
-   Hours sidebar becomes a top strip.
-═══════════════════════════════════════════════ */
+/* MODALS */
+#strava-modal, #consent-modal { position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+#strava-modal.open, #consent-modal.open { opacity: 1; pointer-events: all; }
+.modal-box { background: var(--white); width: 480px; max-width: 90vw; padding: 48px 44px; position: relative; }
+.modal-avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; display: block; margin-bottom: 20px; }
+.modal-title { font-family: 'Gabarito', sans-serif; font-weight: 700; font-size: 36px; line-height: 1; color: var(--black); margin-bottom: 12px; }
+.modal-sub { font-family: 'Manrope', sans-serif; font-size: 14px; line-height: 1.65; color: rgba(0,0,0,0.55); }
+.modal-sub strong { color: var(--black); font-weight: 700; }
+.modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; cursor: pointer; font-size: 20px; color: rgba(0,0,0,0.35); }
+.modal-strava-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 24px; background: #FC4C02; border-radius: 3px; padding: 6px 12px; }
+.modal-strava-badge svg { width: 16px; height: 16px; }
+.modal-strava-badge span { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; color: white; }
+.consent-list { list-style: none; margin: 24px 0 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.consent-list li { display: flex; align-items: flex-start; gap: 14px; font-family: 'Manrope', sans-serif; font-size: 14px; line-height: 1.6; color: rgba(0,0,0,0.7); }
+.consent-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.consent-list strong { color: var(--black); font-weight: 700; }
+.consent-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 32px; }
+.consent-cancel { background: none; border: none; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.4); padding: 10px 16px; }
+.consent-confirm { display: flex; align-items: center; gap: 8px; background: #FC4C02; border: none; border-radius: 4px; padding: 12px 20px; cursor: pointer; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px; color: white; }
+
+/* MOBILE */
 @media (max-width: 768px) {
-
-  /* ── INTRO mobile ── */
-  #i-headline { font-size: clamp(28px, 9vw, 52px); gap: 0; padding: 0 12px; }
-  .i-row { gap: 8px; }
-
-  /* Thumbnails scale down proportionally */
-  .sthumb img, #zthumb img { 
-    width: clamp(55px, 14vw, 90px) !important; 
-    height: auto !important; 
-  }
-
-  /* ── HOURS mobile — full redesign ── */
-
-  /* Nav */
-  .h-nav { padding: 16px 20px; }
-
-  /* Runner fills top 45% of screen on mobile */
-  #runner-panel {
-    left: 0; right: 0; top: 0;
-    width: 100%; height: 45vh;
-    opacity: 1; /* always visible on mobile */
-  }
-  #runner-panel video { object-position: center 15%; }
-
-  /* Hours strip: horizontal row at top, overlapping image */
-  .hours-col {
-    left: 0; right: 0;
-    top: auto; bottom: calc(186px * 0.6 + 115px);
-    height: 52px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    overflow: hidden;
-    padding: 0 16px;
-    background: transparent;
-    /* clip overflow so only active + neighbours show */
-  }
-  .htick {
-    font-size: 11px;
-    color: rgba(0,0,0,0.18);
-    white-space: nowrap;
-    flex-shrink: 0;
-    padding: 0 6px;
-    transition: color 0.3s, font-size 0.25s ease, padding 0.25s ease;
-  }
-  .htick.active {
-    font-size: 38px;
-    line-height: 1;
-    color: var(--black);
-    padding: 0 10px;
-  }
-
-  /* Metrics grid: below runner, 2 col */
-  .metrics-grid {
-    position: absolute;
-    left: 0; right: 0;
-    top: 45vh;
-    bottom: calc(186px * 0.6);
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    padding: 0 0 0 0;
-  }
-  .mcell {
-    padding: 8px 0 8px 16px;
-    justify-content: center;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-  }
-  .mcell:nth-child(odd) { border-right: 1px solid rgba(0,0,0,0.06); }
-  .mlrow { margin-bottom: 6px; }
-  .mlabel { font-size: 10px; }
-  .mval { font-size: 36px; letter-spacing: 0.5px; }
-  .munit { font-size: 16px; }
-  .mdot { width: 6px; height: 6px; }
-
-  /* Weather icon: inside runner panel top-left */
-  .w-icon {
-    left: 16px; bottom: auto;
-    top: calc(45vh - 60px);
-    font-size: 32px;
-  }
-
-  /* Bottom bar: full width */
-  .h-bottom { height: auto; min-height: 64px; }
-  .h-tagline { padding: 10px 20px; font-size: 12px; line-height: 1.5; flex: none; }
-
-  /* Sticky CTA on mobile: full-width, shorter */
-  #sticky-cta {
-    width: 100%; height: 80px;
-    padding: 0 20px; flex-direction: row; gap: 16px;
-  }
-  #sticky-cta .cta-label { font-size: 11px; }
-  #sticky-cta .strava-btn { font-size: 13px; padding: 10px 16px; }
-
-  /* ── OUTRO mobile ── */
-  .o-nav { padding: 20px 20px; }
-  .o-body { padding: 24px 20px 24px 20px; }
-  .o-hl { font-size: clamp(40px, 11vw, 80px); }
-  .o-sub { margin-top: 24px; font-size: 13px; }
+  #i-headline { font-size: clamp(28px, 9vw, 52px); }
+  .htick.active { font-size: 48px; }
+  .metrics-grid { left: 10px; top: auto; bottom: 20px; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; }
+  #runner-panel { left: 0; top: 0; width: 100%; height: 45vh; opacity: 1; }
+  .w-icon { left: 16px; top: 16px; bottom: auto; font-size: 32px; }
+  #sticky-cta { width: 100%; height: 80px; flex-direction: row; padding: 0 20px; gap: 16px; }
+  .o-body { padding: 24px 20px; }
 }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ═══ SECTION 1: INTRO ═══ -->
   <section id="s-intro">
     <div id="p-intro">
       <nav class="i-nav"><div class="logo">WON</div></nav>
       <div id="i-headline">
         <div class="i-row">weather or</div>
-        <div class="i-row">not, &nbsp;<div class="sthumb"><div class="tt">10:00</div></div>&nbsp;here</div>
-        <div class="i-row"><div id="zthumb"><div class="tt">10:00</div></div>&nbsp;i come&nbsp;<div class="sthumb"><div class="tt">10:00</div></div></div>
+        <div class="i-row">not,&nbsp;&nbsp;<div class="sthumb"><div class="tt">10:00</div><video src="videos/video1.mp4" width="110" height="78" autoplay loop muted playsinline style="display:block;object-fit:cover;border-radius:5px;"></video></div>&nbsp;&nbsp;here</div>
+        <div class="i-row"><div id="zthumb"><div class="tt">10:00</div><video src="videos/runner.mp4" width="150" height="108" autoplay loop muted playsinline style="display:block;object-fit:cover;border-radius:5px;"></video></div>&nbsp;&nbsp;i come&nbsp;&nbsp;<div class="sthumb"><div class="tt">10:00</div><video src="videos/video2.mp4" width="128" height="92" autoplay loop muted playsinline style="display:block;object-fit:cover;border-radius:5px;"></video></div></div>
       </div>
       <div id="scroll-cue">scroll</div>
     </div>
   </section>
 
-  <!-- ═══ SECTION 2: HOURS ═══ -->
   <section id="s-hours">
     <div id="p-hours">
       <div class="h-bg" id="hBg"></div>
@@ -558,58 +156,39 @@ html, body {
     </div>
   </section>
 
-  <!-- ═══ SECTION 3: OUTRO ═══ -->
   <section id="s-outro">
     <nav class="o-nav"><div class="logo">WON</div></nav>
     <div class="o-body">
       <div class="o-hl">this is not<br>another<br>weather app</div>
       <div class="o-sub">these are the best time slots for you to hit the ground running</div>
     </div>
-    <!-- bottom padding so content isn't hidden behind fixed CTA -->
     <div style="height:186px"></div>
   </section>
 
-</div><!-- /#app -->
-
-<!-- Zoom overlay lives outside #app so it's truly fixed to viewport -->
-<div id="zoom-overlay">
-  <div class="zt-label" id="ztLabel">10:00</div>
-  <video src="videos/runner.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;"></video>
 </div>
 
-<!-- Sticky CTA — Strava OAuth -->
+<div id="zoom-overlay">
+  <div class="zt-label" id="ztLabel">10:00</div>
+  <video src="videos/runner.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+</div>
+
 <div id="sticky-cta">
   <div class="cta-label">apply for beta</div>
   <button class="strava-btn" id="stravaBtn">
-    <!-- Strava logomark -->
-    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-      <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0 5 13.828h4.172"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0 5 13.828h4.172"/></svg>
     Connect with Strava
   </button>
 </div>
 
-<!-- Consent modal — shown BEFORE Strava OAuth -->
 <div id="consent-modal">
   <div class="modal-box">
     <button class="modal-close" id="consentClose">✕</button>
     <div class="modal-title">before you connect</div>
-    <div class="modal-sub">
-      To join the WON beta, you'll connect your Strava account. Here's exactly what that means:
-    </div>
+    <div class="modal-sub">To join the WON beta, you'll connect your Strava account. Here's exactly what that means:</div>
     <ul class="consent-list">
-      <li>
-        <span class="consent-icon">👤</span>
-        <span>We read your <strong>public Strava profile</strong> (name, photo, city) to add you to the waitlist.</span>
-      </li>
-      <li>
-        <span class="consent-icon">✍️</span>
-        <span>We'll automatically add a short line to your <strong>future activity descriptions</strong> — something like <em>"I found the best time to run using www.weatherornot.app"</em> — so your community knows about WON.</span>
-      </li>
-      <li>
-        <span class="consent-icon">🔒</span>
-        <span>We <strong>never</strong> read your private activities, GPS data, heart rate, or any personal health information.</span>
-      </li>
+      <li><span class="consent-icon">👤</span><span>We read your <strong>public Strava profile</strong> (name, photo, city) to add you to the waitlist.</span></li>
+      <li><span class="consent-icon">✍️</span><span>We'll automatically add a short line to your <strong>future activity descriptions</strong> — something like <em>"I found the best time to run using www.weatherornot.app"</em> — so your community knows about WON.</span></li>
+      <li><span class="consent-icon">🔒</span><span>We <strong>never</strong> read your private activities, GPS data, heart rate, or any personal health information.</span></li>
     </ul>
     <div class="consent-actions">
       <button class="consent-cancel" id="consentCancel">cancel</button>
@@ -621,17 +200,12 @@ html, body {
   </div>
 </div>
 
-<!-- Post-auth confirmation modal -->
 <div id="strava-modal">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">✕</button>
     <img class="modal-avatar" id="modalAvatar" src="" alt="" />
-    <div class="modal-title" id="modalTitle">you're in.</div>
-    <div class="modal-sub">
-      Welcome <strong id="modalName"></strong> — you're on the WON beta waitlist.<br>
-      We'll reach out when your spot is ready.<br><br>
-      Your future Strava activities will automatically include a WON mention in the description.
-    </div>
+    <div class="modal-title">you're in.</div>
+    <div class="modal-sub">Welcome <strong id="modalName"></strong> — you're on the WON beta waitlist.<br>We'll reach out when your spot is ready.<br><br>Your future Strava activities will automatically include a WON mention in the description.</div>
     <div class="modal-strava-badge">
       <svg viewBox="0 0 24 24" fill="white"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0 5 13.828h4.172"/></svg>
       <span>Connected via Strava</span>
@@ -640,23 +214,17 @@ html, body {
 </div>
 
 <script>
-/* ─────────────────────────────────────────────
-   DATA
-───────────────────────────────────────────── */
-const RUNNER  = 'videos/runner.mp4';   // main — zooms into hourly screen
-const VIDEO_1 = 'videos/video1.mp4';   // row 2 thumbnail
-const VIDEO_2 = 'videos/video2.mp4';   // row 3 right thumbnail
 const POOR = '#fd9363', FAIR = '#f5c842', GOOD = '#83e9d0';
 const HOURS = [
-  { label:'06:00', feel:-2, temp:2,  wind:18, gust:30, rainPct:10, rainMm:'0.1', score:42, icon:'☁️'  },
-  { label:'08:00', feel:1,  temp:4,  wind:14, gust:25, rainPct:5,  rainMm:'0.0', score:63, icon:'⛅'  },
+  { label:'06:00', feel:-2, temp:2,  wind:18, gust:30, rainPct:10, rainMm:'0.1', score:42, icon:'☁️' },
+  { label:'08:00', feel:1,  temp:4,  wind:14, gust:25, rainPct:5,  rainMm:'0.0', score:63, icon:'⛅' },
   { label:'10:00', feel:3,  temp:6,  wind:16, gust:27, rainPct:23, rainMm:'0.6', score:52, icon:'🌧️' },
-  { label:'12:00', feel:6,  temp:8,  wind:12, gust:22, rainPct:14, rainMm:'0.3', score:74, icon:'⛅'  },
-  { label:'14:00', feel:8,  temp:10, wind:10, gust:18, rainPct:8,  rainMm:'0.1', score:83, icon:'☀️'  },
-  { label:'16:00', feel:9,  temp:11, wind:10, gust:18, rainPct:6,  rainMm:'0.0', score:89, icon:'☀️'  },
-  { label:'18:00', feel:10, temp:9,  wind:8,  gust:16, rainPct:0,  rainMm:'0.0', score:93, icon:'☀️'  },
-  { label:'20:00', feel:5,  temp:7,  wind:11, gust:19, rainPct:5,  rainMm:'0.0', score:76, icon:'⛅'  },
-  { label:'22:00', feel:1,  temp:4,  wind:16, gust:24, rainPct:15, rainMm:'0.3', score:82, icon:'🌙'  },
+  { label:'12:00', feel:6,  temp:8,  wind:12, gust:22, rainPct:14, rainMm:'0.3', score:74, icon:'⛅' },
+  { label:'14:00', feel:8,  temp:10, wind:10, gust:18, rainPct:8,  rainMm:'0.1', score:83, icon:'☀️' },
+  { label:'16:00', feel:9,  temp:11, wind:10, gust:18, rainPct:6,  rainMm:'0.0', score:89, icon:'☀️' },
+  { label:'18:00', feel:10, temp:9,  wind:8,  gust:16, rainPct:0,  rainMm:'0.0', score:93, icon:'☀️' },
+  { label:'20:00', feel:5,  temp:7,  wind:11, gust:19, rainPct:5,  rainMm:'0.0', score:76, icon:'⛅' },
+  { label:'22:00', feel:1,  temp:4,  wind:16, gust:24, rainPct:15, rainMm:'0.3', score:82, icon:'🌙' }
 ];
 const N = HOURS.length;
 const scoreColor = s => s >= 80 ? GOOD : s >= 60 ? FAIR : POOR;
@@ -664,9 +232,7 @@ const lerp  = (a, b, t) => a + (b - a) * t;
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const ease  = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
 
-/* ─────────────────────────────────────────────
-   BUILD HOURS SIDEBAR
-───────────────────────────────────────────── */
+// Build hours sidebar
 const hoursColEl = document.getElementById('hoursCol');
 HOURS.forEach((h, i) => {
   const el = document.createElement('div');
@@ -675,100 +241,61 @@ HOURS.forEach((h, i) => {
   hoursColEl.appendChild(el);
 });
 
-/* ─────────────────────────────────────────────
-   BUILD INTRO HEADLINE
-───────────────────────────────────────────── */
-// Headline is static HTML
-const zThumb = document.getElementById('zthumb');
-
-
-
-
-/* ─────────────────────────────────────────────
-   ZOOM OVERLAY ENGINE
-   
-   #zoom-overlay is position:fixed outside #app.
-   
-   START rect = #zthumb bounding rect
-   END   rect = #runner-panel bounding rect
-   
-   We interpolate between them based on how far
-   into the "zoom window" (1vh→2vh of scroll) we are.
-───────────────────────────────────────────── */
+// Zoom overlay
 const zOverlay = document.getElementById('zoom-overlay');
 const ztLabel  = document.getElementById('ztLabel');
+const zThumb   = document.getElementById('zthumb');
 let startRect  = null;
 
 function captureStart() {
   const r = zThumb.getBoundingClientRect();
-  // Only capture when intro is at rest (scroll < 1vh)
   startRect = { left: r.left, top: r.top, width: r.width, height: r.height };
 }
 
 function isMobile() { return window.innerWidth <= 768; }
 
 function endRect() {
-  if (isMobile()) {
-    // Mobile: runner panel is full-width top 45%
-    return { left: 0, top: 0, width: window.innerWidth, height: Math.round(window.innerHeight * 0.45) };
-  }
-  // Desktop: floating rect — left:534, top:85, width:611, height:786 (matches Figma)
+  if (isMobile()) return { left: 0, top: 0, width: window.innerWidth, height: Math.round(window.innerHeight * 0.45) };
   return { left: 534, top: 85, width: 611, height: 786 };
 }
 
 function applyZoom(p) {
-  // p = 0: overlay sits on top of zThumb (invisible — zThumb shows through)
-  // p = 0→1: overlay grows toward runner panel; zThumb hidden
-  // p = 1: overlay is full runner panel size; then we hide it, runner panel takes over
-
   if (p <= 0) {
-    // Before zoom: overlay invisible, zThumb visible normally
     zOverlay.style.opacity = '0';
     zThumb.classList.remove('hidden');
     document.getElementById('i-headline').style.opacity = '1';
     document.querySelector('.i-nav').style.opacity = '1';
-    document.getElementById('scroll-cue').style.opacity = '';
+    document.getElementById('scroll-cue').style.opacity = '1';
     return;
   }
-
   if (!startRect) captureStart();
   const er = endRect();
   const t  = ease(clamp(p, 0, 1));
-
   if (p >= 1) {
-    // Zoom complete — hide overlay; make runner-panel visible (it's now identical in position)
     zOverlay.style.opacity = '0';
     document.getElementById('runner-panel').style.opacity = '1';
     return;
   }
-
-  // During zoom: keep runner-panel hidden so only the overlay is visible
   document.getElementById('runner-panel').style.opacity = '0';
-
-  // Show overlay, hide original thumb
   zThumb.classList.add('hidden');
   zOverlay.style.opacity = '1';
-  zOverlay.style.left         = lerp(startRect.left,   er.left,   t) + 'px';
-  zOverlay.style.top          = lerp(startRect.top,    er.top,    t) + 'px';
-  zOverlay.style.width        = lerp(startRect.width,  er.width,  t) + 'px';
-  zOverlay.style.height       = lerp(startRect.height, er.height, t) + 'px';
+  zOverlay.style.left   = lerp(startRect.left,   er.left,   t) + 'px';
+  zOverlay.style.top    = lerp(startRect.top,    er.top,    t) + 'px';
+  zOverlay.style.width  = lerp(startRect.width,  er.width,  t) + 'px';
+  zOverlay.style.height = lerp(startRect.height, er.height, t) + 'px';
   zOverlay.style.borderRadius = lerp(6, 0, t) + 'px';
-
-  // Fade label and headline
-  ztLabel.style.opacity = String(clamp(1 - p * 5, 0, 1));
   const hlOp = clamp(1 - p * 2.5, 0, 1);
   document.getElementById('i-headline').style.opacity = hlOp;
   document.querySelector('.i-nav').style.opacity = String(hlOp);
   document.getElementById('scroll-cue').style.opacity = String(hlOp);
+  ztLabel.style.opacity = String(clamp(1 - p * 5, 0, 1));
 }
 
-/* ─────────────────────────────────────────────
-   HOURS UPDATE
-───────────────────────────────────────────── */
+// Hours update
 const hBg      = document.getElementById('hBg');
 const wIconEl  = document.getElementById('wIcon');
 const wxPat    = document.getElementById('weather-pattern');
-const runnerImg = document.getElementById('runnerImg');
+const runnerImg= document.getElementById('runnerImg');
 const mFeel    = document.getElementById('mFeel');
 const mTemp    = document.getElementById('mTemp');
 const mWind    = document.getElementById('mWind');
@@ -787,174 +314,82 @@ function updateHour(idx) {
   const h = HOURS[idx];
   hBg.style.background = scoreColor(h.score);
   wIconEl.textContent  = h.icon;
-
-  // Swap weather pattern SVG — replace these files with your own exports
-  const patSrc = h.score < 60 ? 'images/pattern-poor.svg'
-               : h.score < 80 ? 'images/pattern-fair.svg'
-               :                 'images/pattern-good.svg';
-  wxPat.innerHTML = `<img src="${patSrc}" style="width:100%;height:100%;display:block;" />`;
-  flip(mFeel,    `${h.feel}<span class="munit">°</span>`);
-  flip(mTemp,    `${h.temp}<span class="munit">°</span>`);
-  flip(mWind,    `${h.wind}<span class="munit">W</span>`);
-  flip(mGust,    `${h.gust}<span class="munit">W</span>`);
-  flip(mRainPct, `${h.rainPct}`);
-  flip(mRainMm,  `${h.rainMm}`);
+  const patSrc = h.score < 60 ? 'images/pattern-poor.svg' : h.score < 80 ? 'images/pattern-fair.svg' : 'images/pattern-good.svg';
+  wxPat.innerHTML = '<img src="' + patSrc + '" style="width:100%;height:100%;display:block;" />';
+  flip(mFeel,    h.feel    + '<span class="munit">°</span>');
+  flip(mTemp,    h.temp    + '<span class="munit">°</span>');
+  flip(mWind,    h.wind    + '<span class="munit">W</span>');
+  flip(mGust,    h.gust    + '<span class="munit">W</span>');
+  flip(mRainPct, h.rainPct + '');
+  flip(mRainMm,  h.rainMm  + '');
   document.querySelectorAll('.htick').forEach((el, i) => el.classList.toggle('active', i === idx));
-  runnerImg.style.transform = `scale(${1 + (idx / (N-1)) * 0.38})`;
+  runnerImg.style.transform = 'scale(' + (1 + (idx / (N-1)) * 0.38) + ')';
 }
 
-/* ─────────────────────────────────────────────
-   SCROLL HANDLER
-   
-   #app scrolls. scrollTop maps to:
-   
-   0         → vh      : Phase A — intro locked, type animation
-   vh        → 2×vh    : Phase B — zoom transition
-   2×vh      → 19×vh   : Phase C — hourly, one hour per vh
-───────────────────────────────────────────── */
+// Scroll
 const stickyCta = document.getElementById('sticky-cta');
 
 function onScroll() {
   const sy = window.scrollY;
   const vh = window.innerHeight;
-
-  // Phase A — intro at rest
-  if (sy < vh) {
-    captureStart();
-    applyZoom(0);
-  }
-
-  // Phase B — zoom (sy from 1×vh to 2×vh)
+  if (sy < vh) { captureStart(); applyZoom(0); }
   const zoomP = (sy - vh) / vh;
   if (zoomP > 0) applyZoom(zoomP);
-
-  // Phase C — hourly (sy from 2×vh, each hour = 1×vh)
   const hoursRel = sy - vh * 2;
   if (hoursRel >= 0) {
     const idx = clamp(Math.floor(hoursRel / vh), 0, N - 1);
     updateHour(idx);
   }
-
-  // CTA: visible once zoom completes
-  if (sy >= vh * 2) {
-    stickyCta.classList.add('visible');
-  } else {
-    stickyCta.classList.remove('visible');
-  }
+  stickyCta.classList.toggle('visible', sy >= vh * 2);
 }
 
 window.addEventListener('scroll', onScroll, { passive: true });
 
-// ── Set section heights in real pixels (avoids vh unit issues in custom scroll containers) ──
 function setSectionHeights() {
   const vh = window.innerHeight;
-  document.getElementById('s-intro').style.height  = (vh * 2) + 'px';
-  document.getElementById('s-hours').style.height  = (vh * N) + 'px';
-  document.getElementById('p-hours').style.height  = vh + 'px';
-  document.getElementById('p-intro').style.height  = vh + 'px';
+  document.getElementById('s-intro').style.height = (vh * 2) + 'px';
+  document.getElementById('s-hours').style.height = (vh * N) + 'px';
+  document.getElementById('p-intro').style.height = vh + 'px';
+  document.getElementById('p-hours').style.height = vh + 'px';
 }
 setSectionHeights();
 window.addEventListener('resize', () => { setSectionHeights(); captureStart(); onScroll(); });
-
-// Init
 updateHour(0);
 setTimeout(() => { captureStart(); applyZoom(0); }, 120);
 
-/* ─────────────────────────────────────────────
-   STRAVA OAUTH
-   
-   Flow:
-   1. User clicks button → redirect to Strava auth page
-   2. Strava redirects back to /?code=xxx
-   3. Page detects ?code param → calls /.netlify/functions/strava-auth
-   4. Function exchanges code for token, saves to waitlist, returns profile
-   5. Modal shows with user's name + avatar
-   
-   SETUP: set your Strava Client ID below.
-   Your Client Secret lives only in the Netlify function (never here).
-───────────────────────────────────────────── */
-const STRAVA_CLIENT_ID = 'YOUR_CLIENT_ID'; // ← replace with your Strava app Client ID
+// Strava OAuth
+const STRAVA_CLIENT_ID = 'YOUR_CLIENT_ID';
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 
-const stravaBtn    = document.getElementById('stravaBtn');
-const consentModal = document.getElementById('consent-modal');
-const consentClose = document.getElementById('consentClose');
-const consentCancel= document.getElementById('consentCancel');
-const consentConfirm=document.getElementById('consentConfirm');
-const modal        = document.getElementById('strava-modal');
-const modalClose   = document.getElementById('modalClose');
-const modalName    = document.getElementById('modalName');
-const modalAvatar  = document.getElementById('modalAvatar');
-
-function openConsent() { consentModal.classList.add('open'); }
-function closeConsent() { consentModal.classList.remove('open'); }
-
-function redirectToStrava() {
-  const params = new URLSearchParams({
-    client_id:       STRAVA_CLIENT_ID,
-    redirect_uri:    REDIRECT_URI,
-    response_type:   'code',
-    approval_prompt: 'auto',
-    scope: 'read,activity:write',
-  });
-  window.location.href = `https://www.strava.com/oauth/authorize?${params}`;
-}
-
-// CTA → open consent modal
-stravaBtn.addEventListener('click', openConsent);
-
-// Consent modal controls
-consentClose.addEventListener('click', closeConsent);
-consentCancel.addEventListener('click', closeConsent);
-consentModal.addEventListener('click', e => { if (e.target === consentModal) closeConsent(); });
-
-// Confirm → close consent, redirect to Strava
-consentConfirm.addEventListener('click', () => {
-  closeConsent();
-  redirectToStrava();
+document.getElementById('stravaBtn').addEventListener('click', () => document.getElementById('consent-modal').classList.add('open'));
+document.getElementById('consentClose').addEventListener('click', () => document.getElementById('consent-modal').classList.remove('open'));
+document.getElementById('consentCancel').addEventListener('click', () => document.getElementById('consent-modal').classList.remove('open'));
+document.getElementById('consent-modal').addEventListener('click', e => { if (e.target === document.getElementById('consent-modal')) document.getElementById('consent-modal').classList.remove('open'); });
+document.getElementById('consentConfirm').addEventListener('click', () => {
+  document.getElementById('consent-modal').classList.remove('open');
+  const params = new URLSearchParams({ client_id: STRAVA_CLIENT_ID, redirect_uri: REDIRECT_URI, response_type: 'code', approval_prompt: 'auto', scope: 'read,activity:write' });
+  window.location.href = 'https://www.strava.com/oauth/authorize?' + params;
 });
 
-// On page load — check if Strava redirected back with a code
 (async function handleCallback() {
   const params = new URLSearchParams(window.location.search);
-  const code  = params.get('code');
-  const error = params.get('error');
-
-  if (error) {
-    // User denied — clean URL silently
-    window.history.replaceState({}, '', window.location.pathname);
-    return;
-  }
-
-  if (!code) return; // normal page load, nothing to do
-
-  // Clean the URL so refresh doesn't re-trigger
+  const code = params.get('code');
+  if (params.get('error')) { window.history.replaceState({}, '', window.location.pathname); return; }
+  if (!code) return;
   window.history.replaceState({}, '', window.location.pathname);
-
   try {
-    // Exchange code via Netlify function (keeps client secret server-side)
-    const res = await fetch('/.netlify/functions/strava-auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-
+    const res = await fetch('/.netlify/functions/strava-auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
     if (!res.ok) throw new Error('Auth failed');
     const athlete = await res.json();
-
-    // Show confirmation modal
-    modalName.textContent   = athlete.firstname + ' ' + athlete.lastname;
-    modalAvatar.src         = athlete.profile_medium || athlete.profile || '';
-    modalAvatar.style.display = athlete.profile ? 'block' : 'none';
-    modal.classList.add('open');
-  } catch (err) {
-    console.error('Strava auth error:', err);
-    alert('Something went wrong connecting to Strava. Please try again.');
-  }
+    document.getElementById('modalName').textContent = athlete.firstname + ' ' + athlete.lastname;
+    document.getElementById('modalAvatar').src = athlete.profile_medium || '';
+    document.getElementById('modalAvatar').style.display = athlete.profile_medium ? 'block' : 'none';
+    document.getElementById('strava-modal').classList.add('open');
+  } catch(err) { console.error('Strava auth error:', err); }
 })();
 
-modalClose.addEventListener('click', () => modal.classList.remove('open'));
-modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
-
+document.getElementById('modalClose').addEventListener('click', () => document.getElementById('strava-modal').classList.remove('open'));
+document.getElementById('strava-modal').addEventListener('click', e => { if (e.target === document.getElementById('strava-modal')) document.getElementById('strava-modal').classList.remove('open'); });
+</script>
 </body>
 </html>
