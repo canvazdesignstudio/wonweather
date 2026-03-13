@@ -19,7 +19,7 @@ body{overflow-x:hidden}
 .scene.active{opacity:1;pointer-events:all}
 
 /* Scroll spacer — just creates scrollable height */
-#spacer{height:1200vh}
+#spacer{height:1300vh}
 
 /* ── INTRO ── */
 #scene-intro{background:#fff;z-index:10}
@@ -336,9 +336,9 @@ function onScroll(){
   var pct=sy/total;
   progress.style.width=(pct*100)+'%';
 
-  var introEnd=vh*10;
-  var hoursStart=vh*10;
-  var hoursEnd=vh*(10+N*10); // 10vh per hour
+  var introEnd=vh*1.5;
+  var hoursStart=vh*1.5;
+  var hoursEnd=vh*(1.5+N); // 1vh per hour
   var outroStart=hoursEnd;
 
   if(sy<introEnd){
@@ -347,7 +347,7 @@ function onScroll(){
     hide(sceneOutro);
     hide(stickyCta);
     // Fade intro in last 2vh before hours
-    var fadeStart=introEnd-vh*2;
+    var fadeStart=introEnd-vh*0.5;
     if(sy>fadeStart){
       sceneIntro.style.opacity=String(1-((sy-fadeStart)/(vh*2)));
     } else {
