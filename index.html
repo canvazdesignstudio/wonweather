@@ -7,36 +7,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--poor:#fd9363;--fair:#f5c842;--good:#83e9d0}
-html,body{width:100%;overflow-x:hidden;background:#fff}
+html,body{width:100%;background:#fff}
+body{overflow-x:hidden}
 
-/* ── ONE STICKY PANEL ── */
-#scroll-track{position:relative;z-index:2}
-#sticky-panel{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#fff}
-
-/* ── INTRO LAYER ── */
-#p-intro{
-  position:absolute;inset:0;background:#fff;
-  z-index:10;transition:opacity 0.3s ease;
+/* Every section is position:fixed, shown/hidden by JS */
+.scene{
+  position:fixed;inset:0;width:100%;height:100vh;
+  opacity:0;pointer-events:none;transition:opacity 0.4s ease;
+  overflow:hidden;
 }
-#p-hours{position:absolute;inset:0;z-index:1}
-.i-nav{position:absolute;top:24px;left:32px;z-index:2}
-.logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000}
+.scene.active{opacity:1;pointer-events:all}
+
+/* Scroll spacer — just creates scrollable height */
+#spacer{height:1200vh}
+
+/* ── INTRO ── */
+#scene-intro{background:#fff;z-index:10}
+.logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000;position:absolute;top:24px;left:32px}
 #i-headline{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:4px;font-family:'Gabarito',sans-serif;font-weight:700;
   font-size:clamp(36px,7.5vw,108px);line-height:1;color:#000;
-  padding:0 20px;text-align:center;
 }
 .i-row{display:flex;align-items:center;justify-content:center;gap:16px}
 .vid-thumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
 .vid-thumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
-.vid-thumb video{display:block;object-fit:cover;border-radius:5px;background:#eee}
-#zthumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
-#zthumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
-#zthumb video{display:block;object-fit:cover;border-radius:5px;background:#eee}
-#zthumb.hidden{opacity:0}
+.vid-thumb video{display:block;object-fit:cover;border-radius:5px;background:#ddd}
 #scroll-cue{
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;
@@ -45,107 +42,81 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
 }
 #scroll-cue::after{content:'';display:block;width:1px;height:36px;background:rgba(0,0,0,0.2)}
 
-/* ── ZOOM OVERLAY ── */
-#zoom-overlay{
-  position:fixed;z-index:9999;overflow:hidden;
-  border-radius:6px;pointer-events:none;opacity:0
-}
-
-/* ── HOURS LAYER ── */
-#p-hours{position:absolute;inset:0;z-index:1;background:var(--poor);opacity:0;transition:opacity 0.3s}
-.h-bg{position:absolute;inset:0;background:var(--poor);transition:background 0.5s ease;z-index:0}
-#p-hours::after{
+/* ── HOURS ── */
+#scene-hours{z-index:5}
+.h-bg{position:absolute;inset:0;background:#fd9363;transition:background 0.5s;z-index:0}
+#scene-hours::after{
   content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background-image:repeating-linear-gradient(
-    -45deg,transparent 0,transparent 18px,
-    rgba(0,0,0,0.025) 18px,rgba(0,0,0,0.025) 19px
-  )
+  background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 18px,rgba(0,0,0,0.025) 18px,rgba(0,0,0,0.025) 19px)
 }
-.h-nav{position:absolute;top:0;left:0;right:0;padding:18px 32px;z-index:20}
+.h-logo{position:absolute;top:18px;left:32px;z-index:20}
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
   font-family:'Manrope',sans-serif;font-weight:700;z-index:10
 }
-.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:color 0.3s,font-size 0.25s}
-.htick.active{font-size:80px;color:#000;line-height:0.85}
+.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.2s,color 0.2s}
+.htick.active{font-size:72px;color:#000;line-height:0.9}
 .metrics-grid{
   position:absolute;left:270px;top:90px;
   display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
   z-index:10
 }
 .mcell{display:flex;flex-direction:column;justify-content:center;padding:0 0 0 20px}
-.mlrow{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.mlrow{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .mdot{width:8px;height:8px;border-radius:50%;background:#000;flex-shrink:0}
 .mlabel{font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;color:#000}
 .mlabel em{font-style:normal;font-weight:400;color:rgba(0,0,0,0.5)}
 .mval{font-family:'Gabarito',sans-serif;font-weight:700;font-size:64px;line-height:1;color:#020202}
 .munit{font-size:26px}
-@keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.mval.flip{animation:flipIn 0.2s ease forwards}
+@keyframes flipIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flip{animation:flipIn 0.18s ease forwards}
 #runner-panel{
   position:absolute;left:534px;top:85px;width:611px;height:786px;
-  overflow:hidden;z-index:6;opacity:0;transition:opacity 0.3s
+  overflow:hidden;z-index:6
 }
 #runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block}
-.w-icon{position:absolute;left:270px;bottom:226px;font-size:46px;z-index:10}
+.w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
-  position:absolute;bottom:0;left:0;right:0;height:186px;
+  position:absolute;bottom:0;left:0;right:590px;height:186px;
   display:flex;align-items:center;z-index:20;padding-left:270px
 }
 .h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
 
-/* ── STICKY CTA ── */
+/* ── OUTRO ── */
+#scene-outro{background:#83e9d0;z-index:5}
+#scene-outro::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)
+}
+.o-body{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:40px 40px 40px 335px;z-index:1
+}
+.o-hl{font-family:'Gabarito',sans-serif;font-weight:700;font-size:clamp(52px,8vw,120px);line-height:0.93;color:#000}
+.o-sub{margin-top:44px;font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:rgba(0,0,0,0.65);max-width:400px}
+
+/* ── PROGRESS BAR ── */
+#progress{
+  position:fixed;top:0;left:0;height:2px;background:rgba(0,0,0,0.15);
+  z-index:9999;width:0%;transition:width 0.1s linear
+}
+
+/* ── CTA ── */
 #sticky-cta{
   position:fixed;bottom:0;right:0;width:590px;height:186px;
   background:#000;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:12px;
   cursor:pointer;z-index:10000;
-  transform:translateX(100%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)
+  transform:translateX(110%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)
 }
 #sticky-cta.visible{transform:translateX(0)}
-.cta-label{
-  font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;
-  letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5)
-}
-.strava-btn{
-  display:flex;align-items:center;gap:10px;background:#FC4C02;
-  border:none;border-radius:4px;padding:12px 22px;cursor:pointer;
-  font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;color:#fff
-}
+.cta-label{font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.strava-btn{display:flex;align-items:center;gap:10px;background:#FC4C02;border:none;border-radius:4px;padding:12px 22px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;color:#fff}
 .strava-btn svg{width:20px;height:20px}
 
-/* ── OUTRO ── */
-#s-outro{
-  min-height:100vh;background:var(--good);
-  display:flex;flex-direction:column;position:relative;overflow:hidden;
-  z-index:0
-}
-#s-outro::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)
-}
-.o-nav{position:relative;padding:28px 32px;z-index:1}
-.o-body{
-  flex:1;position:relative;z-index:1;
-  display:flex;flex-direction:column;justify-content:center;
-  padding:40px 40px 40px 335px
-}
-.o-hl{
-  font-family:'Gabarito',sans-serif;font-weight:700;
-  font-size:clamp(52px,8vw,120px);line-height:0.93;color:#000
-}
-.o-sub{
-  margin-top:44px;font-family:'Manrope',sans-serif;
-  font-size:15px;line-height:1.65;color:rgba(0,0,0,0.65);max-width:400px
-}
-
 /* ── MODALS ── */
-.modal-overlay{
-  position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity 0.3s
-}
+.modal-overlay{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal-box{background:#fff;width:480px;max-width:90vw;padding:48px 44px;position:relative}
 .modal-close{position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;font-size:20px;color:rgba(0,0,0,0.4)}
@@ -156,111 +127,95 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
 .modal-badge span{font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;color:#fff}
 .consent-list{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-direction:column;gap:16px}
 .consent-list li{display:flex;align-items:flex-start;gap:14px;font-family:'Manrope',sans-serif;font-size:14px;line-height:1.6;color:rgba(0,0,0,0.7)}
-.consent-list strong{color:#000;font-weight:700}
 .consent-icon{font-size:18px;flex-shrink:0}
 .consent-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:32px}
 .consent-cancel{background:none;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;color:rgba(0,0,0,0.4);padding:10px 16px}
 .consent-confirm{display:flex;align-items:center;gap:8px;background:#FC4C02;border:none;border-radius:4px;padding:12px 20px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#fff}
-
-@media(max-width:768px){
-  .htick.active{font-size:44px}
-  .metrics-grid{left:8px;top:auto;bottom:16px;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}
-  #runner-panel{left:0;top:0;width:100%;height:44vh;opacity:1}
-  .w-icon{left:12px;top:12px;bottom:auto;font-size:28px}
-  #sticky-cta{width:100%;height:72px;flex-direction:row;padding:0 20px;gap:12px}
-  .o-body{padding:24px 20px}
-  .h-bottom{padding-left:8px}
-}
 </style>
 </head>
 <body>
 
-<div id="scroll-track">
-  <div id="sticky-panel">
+<!-- Scroll spacer -->
+<div id="spacer"></div>
 
-    <!-- INTRO LAYER -->
-    <div id="p-intro">
-      <nav class="i-nav"><div class="logo">WON</div></nav>
-      <div id="i-headline">
-        <div class="i-row">weather or</div>
-        <div class="i-row">
-          not,&nbsp;
-          <div class="vid-thumb">
-            <div class="tt">10:00</div>
-            <video src="videos/video1.mp4" width="110" height="78" autoplay loop muted playsinline></video>
-          </div>
-          &nbsp;here
-        </div>
-        <div class="i-row">
-          <div id="zthumb">
-            <div class="tt">10:00</div>
-            <video src="videos/runner.mp4" width="148" height="106" autoplay loop muted playsinline></video>
-          </div>
-          &nbsp;i come&nbsp;
-          <div class="vid-thumb">
-            <div class="tt">10:00</div>
-            <video src="videos/video2.mp4" width="126" height="90" autoplay loop muted playsinline></video>
-          </div>
-        </div>
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- SCENE: INTRO -->
+<div id="scene-intro" class="scene active">
+  <div class="logo">WON</div>
+  <div id="i-headline">
+    <div class="i-row">weather or</div>
+    <div class="i-row">
+      not,&nbsp;
+      <div class="vid-thumb">
+        <div class="tt">10:00</div>
+        <video src="videos/video1.mp4" width="110" height="78" autoplay loop muted playsinline></video>
       </div>
-      <div id="scroll-cue">scroll</div>
+      &nbsp;here
     </div>
-
-    <!-- HOURS LAYER -->
-    <div id="p-hours">
-      <div class="h-bg" id="hBg"></div>
-      <div class="h-nav"><div class="logo">WON</div></div>
-      <div class="hours-col" id="hoursCol"></div>
-      <div class="w-icon" id="wIcon">&#x2601;&#xFE0F;</div>
-      <div class="metrics-grid">
-        <div class="mcell">
-          <div class="mlrow"><div class="mdot"></div><div class="mlabel">real feel <em>c&#xB0;</em></div></div>
-          <div class="mval" id="mFeel">3<span class="munit">&#xB0;</span></div>
-        </div>
-        <div class="mcell">
-          <div class="mlrow"><div class="mdot"></div><div class="mlabel">real temp <em>c&#xB0;</em></div></div>
-          <div class="mval" id="mTemp">6<span class="munit">&#xB0;</span></div>
-        </div>
-        <div class="mcell">
-          <div class="mlrow"><div class="mdot"></div><div class="mlabel">wind <em>km/h</em></div></div>
-          <div class="mval" id="mWind">16<span class="munit">W</span></div>
-        </div>
-        <div class="mcell">
-          <div class="mlrow"><div class="mdot"></div><div class="mlabel">gusts <em>km/h</em></div></div>
-          <div class="mval" id="mGust">27<span class="munit">W</span></div>
-        </div>
-        <div class="mcell">
-          <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>%</em></div></div>
-          <div class="mval" id="mRainPct">23</div>
-        </div>
-        <div class="mcell">
-          <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>mm</em></div></div>
-          <div class="mval" id="mRainMm">0.6</div>
-        </div>
+    <div class="i-row">
+      <div class="vid-thumb">
+        <div class="tt">10:00</div>
+        <video src="videos/runner.mp4" width="148" height="106" autoplay loop muted playsinline></video>
       </div>
-      <div id="runner-panel">
-        <video id="runnerVid" src="videos/runner.mp4" autoplay loop muted playsinline></video>
-      </div>
-      <div class="h-bottom">
-        <div class="h-tagline">the best time slots for you<br>to hit the ground running</div>
+      &nbsp;i come&nbsp;
+      <div class="vid-thumb">
+        <div class="tt">10:00</div>
+        <video src="videos/video2.mp4" width="126" height="90" autoplay loop muted playsinline></video>
       </div>
     </div>
+  </div>
+  <div id="scroll-cue">scroll</div>
+</div>
 
-  </div><!-- /sticky-panel -->
-</div><!-- /scroll-track -->
+<!-- SCENE: HOURS -->
+<div id="scene-hours" class="scene">
+  <div class="h-bg" id="hBg"></div>
+  <div class="logo h-logo">WON</div>
+  <div class="hours-col" id="hoursCol"></div>
+  <div class="w-icon" id="wIcon">&#x2601;&#xFE0F;</div>
+  <div class="metrics-grid">
+    <div class="mcell">
+      <div class="mlrow"><div class="mdot"></div><div class="mlabel">real feel <em>c&#xB0;</em></div></div>
+      <div class="mval" id="mFeel">3<span class="munit">&#xB0;</span></div>
+    </div>
+    <div class="mcell">
+      <div class="mlrow"><div class="mdot"></div><div class="mlabel">real temp <em>c&#xB0;</em></div></div>
+      <div class="mval" id="mTemp">6<span class="munit">&#xB0;</span></div>
+    </div>
+    <div class="mcell">
+      <div class="mlrow"><div class="mdot"></div><div class="mlabel">wind <em>km/h</em></div></div>
+      <div class="mval" id="mWind">16<span class="munit">W</span></div>
+    </div>
+    <div class="mcell">
+      <div class="mlrow"><div class="mdot"></div><div class="mlabel">gusts <em>km/h</em></div></div>
+      <div class="mval" id="mGust">27<span class="munit">W</span></div>
+    </div>
+    <div class="mcell">
+      <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>%</em></div></div>
+      <div class="mval" id="mRainPct">23</div>
+    </div>
+    <div class="mcell">
+      <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>mm</em></div></div>
+      <div class="mval" id="mRainMm">0.6</div>
+    </div>
+  </div>
+  <div id="runner-panel">
+    <video id="runnerVid" src="videos/runner.mp4" autoplay loop muted playsinline></video>
+  </div>
+  <div class="h-bottom">
+    <div class="h-tagline">the best time slots for you<br>to hit the ground running</div>
+  </div>
+</div>
 
-<section id="s-outro">
-  <nav class="o-nav"><div class="logo">WON</div></nav>
+<!-- SCENE: OUTRO -->
+<div id="scene-outro" class="scene">
+  <div class="logo">WON</div>
   <div class="o-body">
     <div class="o-hl">this is not<br>another<br>weather app</div>
-    <div class="o-sub">these are the best time slots for you to hit the ground running</div>
+    <div class="o-sub">WON scores every hour of the day for running — so you always know the best window.</div>
   </div>
-  <div style="height:186px"></div>
-</section>
-
-<!-- Zoom overlay (outside scroll-track so it's truly fixed) -->
-<div id="zoom-overlay">
-  <video src="videos/runner.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block"></video>
 </div>
 
 <!-- Sticky CTA -->
@@ -279,7 +234,7 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
     <div class="modal-title">before you connect</div>
     <div class="modal-sub">To join the WON beta, connect your Strava account. Here's what that means:</div>
     <ul class="consent-list">
-      <li><span class="consent-icon">&#x1F464;</span><span>We read your <strong>public Strava profile</strong> (name, photo, city) to add you to the waitlist.</span></li>
+      <li><span class="consent-icon">&#x1F464;</span><span>We read your <strong>public Strava profile</strong> to add you to the waitlist.</span></li>
       <li><span class="consent-icon">&#x270D;&#xFE0F;</span><span>We'll add a short line to your <strong>future activity descriptions</strong> mentioning WON.</span></li>
       <li><span class="consent-icon">&#x1F512;</span><span>We <strong>never</strong> access private activities, GPS data, or health information.</span></li>
     </ul>
@@ -287,7 +242,7 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
       <button class="consent-cancel" id="consentCancel">cancel</button>
       <button class="consent-confirm" id="consentConfirm">
         <svg viewBox="0 0 24 24" fill="white" width="16" height="16"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0 5 13.828h4.172"/></svg>
-        I understand &#x2014; connect Strava
+        I understand — connect Strava
       </button>
     </div>
   </div>
@@ -299,7 +254,7 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
     <button class="modal-close" id="modalClose">&#x2715;</button>
     <img class="modal-avatar" id="modalAvatar" src="" alt="">
     <div class="modal-title">you're in.</div>
-    <div class="modal-sub">Welcome <strong id="modalName"></strong> &#x2014; you're on the WON beta waitlist. We'll reach out when your spot is ready.</div>
+    <div class="modal-sub">Welcome <strong id="modalName"></strong> — you're on the WON beta waitlist.</div>
     <div class="modal-badge">
       <svg viewBox="0 0 24 24" fill="white" width="16" height="16"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0 5 13.828h4.172"/></svg>
       <span>Connected via Strava</span>
@@ -308,7 +263,6 @@ html,body{width:100%;overflow-x:hidden;background:#fff}
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────
 var POOR='#fd9363',FAIR='#f5c842',GOOD='#83e9d0';
 var HOURS=[
   {label:'06:00',feel:-2,temp:2, wind:18,gust:30,rainPct:10,rainMm:'0.1',score:42,icon:'&#x2601;&#xFE0F;'},
@@ -324,176 +278,134 @@ var HOURS=[
 var N=HOURS.length;
 
 function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
-function lerp(a,b,t){return a+(b-a)*t}
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
-function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
 
-// ── BUILD HOURS SIDEBAR ───────────────────────────────────────────────
-var hoursColEl=document.getElementById('hoursCol');
+// Build hours sidebar
+var col=document.getElementById('hoursCol');
 HOURS.forEach(function(h,i){
   var el=document.createElement('div');
   el.className='htick'+(i===0?' active':'');
   el.textContent=h.label;
-  hoursColEl.appendChild(el);
+  col.appendChild(el);
 });
 
-// ── REFS ──────────────────────────────────────────────────────────────
-var zOverlay=document.getElementById('zoom-overlay');
-var zThumb=document.getElementById('zthumb');
-var hBg=document.getElementById('hBg');
-var wIconEl=document.getElementById('wIcon');
-var runnerVid=document.getElementById('runnerVid');
-var runnerPanel=document.getElementById('runner-panel');
-var pIntro=document.getElementById('p-intro');
-var stickyCta=document.getElementById('sticky-cta');
-var startRect=null;
 var lastIdx=-1;
-
-// ── ZOOM ──────────────────────────────────────────────────────────────
-function captureStart(){
-  var r=zThumb.getBoundingClientRect();
-  startRect={left:r.left,top:r.top,width:r.width,height:r.height};
-}
-
-function endRect(){
-  if(window.innerWidth<=768) return{left:0,top:0,width:window.innerWidth,height:Math.round(window.innerHeight*0.44)};
-  return{left:534,top:85,width:611,height:786};
-}
-
-function applyZoom(p){
-  if(p<=0){
-    zOverlay.style.opacity='0';
-    zThumb.classList.remove('hidden');
-    runnerPanel.style.opacity='0';
-    return;
-  }
-  if(p>=1){
-    zOverlay.style.opacity='0';
-    runnerPanel.style.opacity='1';
-    return;
-  }
-  if(!startRect) captureStart();
-  var er=endRect();
-  var t=ease(clamp(p,0,1));
-  zThumb.classList.add('hidden');
-  zOverlay.style.opacity='1';
-  zOverlay.style.left=lerp(startRect.left,er.left,t)+'px';
-  zOverlay.style.top=lerp(startRect.top,er.top,t)+'px';
-  zOverlay.style.width=lerp(startRect.width,er.width,t)+'px';
-  zOverlay.style.height=lerp(startRect.height,er.height,t)+'px';
-  zOverlay.style.borderRadius=lerp(6,0,t)+'px';
-  runnerPanel.style.opacity='0';
-}
-
-// ── HOUR UPDATE ───────────────────────────────────────────────────────
 function flip(el,html){
   el.classList.remove('flip');
   void el.offsetWidth;
   el.innerHTML=html;
   el.classList.add('flip');
 }
-
 function updateHour(idx){
   if(idx===lastIdx) return;
   lastIdx=idx;
   var h=HOURS[idx];
-  hBg.style.background=scoreColor(h.score);
-  wIconEl.innerHTML=h.icon;
+  document.getElementById('hBg').style.background=scoreColor(h.score);
+  document.getElementById('wIcon').innerHTML=h.icon;
   flip(document.getElementById('mFeel'),h.feel+'<span class="munit">&#xB0;</span>');
   flip(document.getElementById('mTemp'),h.temp+'<span class="munit">&#xB0;</span>');
   flip(document.getElementById('mWind'),h.wind+'<span class="munit">W</span>');
   flip(document.getElementById('mGust'),h.gust+'<span class="munit">W</span>');
   flip(document.getElementById('mRainPct'),String(h.rainPct));
   flip(document.getElementById('mRainMm'),String(h.rainMm));
-  document.querySelectorAll('.htick').forEach(function(el,i){
-    el.classList.toggle('active',i===idx);
+  document.querySelectorAll('.htick').forEach(function(t,i){
+    t.classList.toggle('active',i===idx);
   });
-  runnerVid.style.transform='scale('+(1+(idx/(N-1))*0.38)+')';
 }
 
-// ── SCROLL ───────────────────────────────────────────────────────────
-function setSectionHeights(){
-  var vh=window.innerHeight;
-  document.getElementById('scroll-track').style.height=(vh*(2+N))+'px';
-}
+// Scene refs
+var sceneIntro=document.getElementById('scene-intro');
+var sceneHours=document.getElementById('scene-hours');
+var sceneOutro=document.getElementById('scene-outro');
+var stickyCta=document.getElementById('sticky-cta');
+var progress=document.getElementById('progress');
+
+function show(el){el.classList.add('active')}
+function hide(el){el.classList.remove('active')}
+
+// Scroll zones (out of 1200vh total):
+// 0–10vh   = intro
+// 10–20vh  = intro fade / transition
+// 20–110vh = hours (9 hours × 10vh each)
+// 110–120vh = outro
 
 function onScroll(){
   var sy=window.scrollY;
   var vh=window.innerHeight;
+  var total=document.getElementById('spacer').offsetHeight;
+  var pct=sy/total;
+  progress.style.width=(pct*100)+'%';
 
-  if(sy<=vh){
-    // Phase A: intro
-    captureStart();
-    applyZoom(0);
-    pIntro.style.opacity='1';
-    pIntro.style.pointerEvents='';
-    document.getElementById('p-hours').style.opacity='0';
+  var introEnd=vh*10;
+  var hoursStart=vh*10;
+  var hoursEnd=vh*(10+N*10); // 10vh per hour
+  var outroStart=hoursEnd;
+
+  if(sy<introEnd){
+    show(sceneIntro);
+    hide(sceneHours);
+    hide(sceneOutro);
+    hide(stickyCta);
+    // Fade intro in last 2vh before hours
+    var fadeStart=introEnd-vh*2;
+    if(sy>fadeStart){
+      sceneIntro.style.opacity=String(1-((sy-fadeStart)/(vh*2)));
+    } else {
+      sceneIntro.style.opacity='1';
+    }
     return;
   }
 
-  if(sy<vh*2){
-    // Phase B: zoom transition
-    var p=(sy-vh)/vh;
-    applyZoom(p);
-    pIntro.style.opacity=String(clamp(1-p*2.5,0,1));
-    pIntro.style.pointerEvents=p>0.4?'none':'';
-    return;
-  }
-
-  // Phase C: hours
-  applyZoom(1);
-  pIntro.style.opacity='0';
-  pIntro.style.pointerEvents='none';
-  document.getElementById('p-hours').style.opacity='1';
-  document.getElementById('p-hours').style.zIndex='20';
-  var idx=clamp(Math.floor((sy-vh*2)/vh),0,N-1);
-  updateHour(idx);
+  sceneIntro.style.opacity='0';
+  hide(sceneIntro);
   stickyCta.classList.add('visible');
+
+  if(sy>=outroStart){
+    hide(sceneHours);
+    show(sceneOutro);
+    return;
+  }
+
+  // Hours phase
+  show(sceneHours);
+  hide(sceneOutro);
+  var idx=clamp(Math.floor((sy-hoursStart)/(vh*10)),0,N-1);
+  updateHour(idx);
 }
 
-setSectionHeights();
 window.scrollTo(0,0);
-window.addEventListener('resize',function(){setSectionHeights();captureStart();});
 window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
 updateHour(0);
-setTimeout(captureStart,200);
 
-// ── STRAVA ───────────────────────────────────────────────────────────
+// Strava
 var CLIENT_ID='YOUR_CLIENT_ID';
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-
 document.getElementById('stravaBtn').addEventListener('click',function(){openModal('consent-modal')});
 document.getElementById('consentClose').addEventListener('click',function(){closeModal('consent-modal')});
 document.getElementById('consentCancel').addEventListener('click',function(){closeModal('consent-modal')});
 document.getElementById('consent-modal').addEventListener('click',function(e){if(e.target===this)closeModal('consent-modal')});
 document.getElementById('consentConfirm').addEventListener('click',function(){
   closeModal('consent-modal');
-  var p=new URLSearchParams({
-    client_id:CLIENT_ID,
-    redirect_uri:window.location.origin+window.location.pathname,
-    response_type:'code',approval_prompt:'auto',scope:'read,activity:write'
-  });
+  var p=new URLSearchParams({client_id:CLIENT_ID,redirect_uri:window.location.origin+window.location.pathname,response_type:'code',approval_prompt:'auto',scope:'read,activity:write'});
   window.location.href='https://www.strava.com/oauth/authorize?'+p;
 });
 document.getElementById('modalClose').addEventListener('click',function(){closeModal('strava-modal')});
 document.getElementById('strava-modal').addEventListener('click',function(e){if(e.target===this)closeModal('strava-modal')});
-
-(function handleCallback(){
+(function(){
   var params=new URLSearchParams(window.location.search);
   var code=params.get('code');
   if(!code) return;
   window.history.replaceState({},'',window.location.pathname);
-  fetch('/.netlify/functions/strava-auth',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({code:code})
-  }).then(function(r){return r.json()}).then(function(a){
-    document.getElementById('modalName').textContent=a.firstname+' '+a.lastname;
-    var av=document.getElementById('modalAvatar');
-    if(a.profile_medium){av.src=a.profile_medium;av.style.display='block'}
-    openModal('strava-modal');
-  }).catch(function(e){console.error('Auth error:',e)});
+  fetch('/.netlify/functions/strava-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
+    .then(function(r){return r.json()})
+    .then(function(a){
+      document.getElementById('modalName').textContent=a.firstname+' '+a.lastname;
+      var av=document.getElementById('modalAvatar');
+      if(a.profile_medium){av.src=a.profile_medium;av.style.display='block'}
+      openModal('strava-modal');
+    }).catch(function(e){console.error(e)});
 })();
 </script>
 </body>
