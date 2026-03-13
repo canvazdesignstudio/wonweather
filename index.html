@@ -10,41 +10,51 @@
 html,body{width:100%;background:#fff}
 body{overflow-x:hidden}
 
-/* Every section is position:fixed, shown/hidden by JS */
+#spacer{height:4000vh}
+
 .scene{
   position:fixed;inset:0;width:100%;height:100vh;
-  opacity:0;pointer-events:none;transition:opacity 0.4s ease;
+  opacity:0;pointer-events:none;
   overflow:hidden;
 }
 .scene.active{opacity:1;pointer-events:all}
 
-/* Scroll spacer — just creates scrollable height */
-#spacer{height:3200vh}
-
 /* ── INTRO ── */
-#scene-intro{background:#fff;z-index:10}
-.logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000;position:absolute;top:24px;left:32px}
+#scene-intro{background:#fff;z-index:10;transition:opacity 0.5s ease}
+.logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000;position:absolute;top:24px;left:32px;z-index:2}
 #i-headline{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;font-family:'Gabarito',sans-serif;font-weight:700;
+  gap:8px;font-family:'Gabarito',sans-serif;font-weight:700;
   font-size:clamp(36px,7.5vw,108px);line-height:1;color:#000;
 }
-.i-row{display:flex;align-items:center;justify-content:center;gap:16px}
-.vid-thumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
+.i-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.vid-thumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0;transition:opacity 0.3s}
 .vid-thumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
 .vid-thumb video{display:block;object-fit:cover;border-radius:5px;background:#ddd}
+#zthumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
+#zthumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
+#zthumb video{display:block;object-fit:cover;border-radius:5px;background:#ddd}
 #scroll-cue{
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;
   font-family:'Manrope',sans-serif;font-size:9px;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;color:rgba(0,0,0,0.3)
+  letter-spacing:3px;text-transform:uppercase;color:rgba(0,0,0,0.3);
+  transition:opacity 0.4s;
 }
 #scroll-cue::after{content:'';display:block;width:1px;height:36px;background:rgba(0,0,0,0.2)}
 
+/* ── ZOOM OVERLAY ── */
+#zoom-overlay{
+  position:fixed;overflow:hidden;border-radius:6px;
+  pointer-events:none;opacity:0;z-index:20;
+  transition:border-radius 0.1s;
+}
+#zoom-overlay video{width:100%;height:100%;object-fit:cover;display:block}
+
 /* ── HOURS ── */
-#scene-hours{z-index:5}
-.h-bg{position:absolute;inset:0;background:#fd9363;transition:background 0.5s;z-index:0}
+#scene-hours{z-index:5;transition:opacity 0.3s ease}
+.h-bg{position:absolute;inset:0;background:#fd9363;transition:background 0.6s ease;z-index:0}
 #scene-hours::after{
   content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
   background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 18px,rgba(0,0,0,0.025) 18px,rgba(0,0,0,0.025) 19px)
@@ -53,9 +63,9 @@ body{overflow-x:hidden}
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
-  font-family:'Manrope',sans-serif;font-weight:700;z-index:10
+  font-family:'Manrope',sans-serif;font-weight:700;z-index:10;
 }
-.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.2s,color 0.2s}
+.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s ease,color 0.25s ease}
 .htick.active{font-size:72px;color:#000;line-height:0.9}
 .metrics-grid{
   position:absolute;left:270px;top:90px;
@@ -69,11 +79,11 @@ body{overflow-x:hidden}
 .mlabel em{font-style:normal;font-weight:400;color:rgba(0,0,0,0.5)}
 .mval{font-family:'Gabarito',sans-serif;font-weight:700;font-size:64px;line-height:1;color:#020202}
 .munit{font-size:26px}
-@keyframes flipIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
 #runner-panel{
   position:absolute;left:534px;top:85px;width:611px;height:786px;
-  overflow:hidden;z-index:6
+  overflow:hidden;z-index:6;
 }
 #runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block}
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
@@ -84,7 +94,7 @@ body{overflow-x:hidden}
 .h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
 
 /* ── OUTRO ── */
-#scene-outro{background:#83e9d0;z-index:5}
+#scene-outro{background:#83e9d0;z-index:5;transition:opacity 0.5s ease}
 #scene-outro::before{
   content:'';position:absolute;inset:0;pointer-events:none;
   background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)
@@ -95,12 +105,6 @@ body{overflow-x:hidden}
 }
 .o-hl{font-family:'Gabarito',sans-serif;font-weight:700;font-size:clamp(52px,8vw,120px);line-height:0.93;color:#000}
 .o-sub{margin-top:44px;font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:rgba(0,0,0,0.65);max-width:400px}
-
-/* ── PROGRESS BAR ── */
-#progress{
-  position:fixed;top:0;left:0;height:2px;background:rgba(0,0,0,0.15);
-  z-index:9999;width:0%;transition:width 0.1s linear
-}
 
 /* ── CTA ── */
 #sticky-cta{
@@ -135,11 +139,7 @@ body{overflow-x:hidden}
 </head>
 <body>
 
-<!-- Scroll spacer -->
 <div id="spacer"></div>
-
-<!-- Progress bar -->
-<div id="progress"></div>
 
 <!-- SCENE: INTRO -->
 <div id="scene-intro" class="scene active">
@@ -155,7 +155,7 @@ body{overflow-x:hidden}
       &nbsp;here
     </div>
     <div class="i-row">
-      <div class="vid-thumb">
+      <div id="zthumb">
         <div class="tt">10:00</div>
         <video src="videos/runner.mp4" width="148" height="106" autoplay loop muted playsinline></video>
       </div>
@@ -167,6 +167,11 @@ body{overflow-x:hidden}
     </div>
   </div>
   <div id="scroll-cue">scroll</div>
+</div>
+
+<!-- ZOOM OVERLAY -->
+<div id="zoom-overlay">
+  <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
 </div>
 
 <!-- SCENE: HOURS -->
@@ -232,7 +237,7 @@ body{overflow-x:hidden}
   <div class="modal-box">
     <button class="modal-close" id="consentClose">&#x2715;</button>
     <div class="modal-title">before you connect</div>
-    <div class="modal-sub">To join the WON beta, connect your Strava account. Here's what that means:</div>
+    <div class="modal-sub">To join the WON beta, connect your Strava account.</div>
     <ul class="consent-list">
       <li><span class="consent-icon">&#x1F464;</span><span>We read your <strong>public Strava profile</strong> to add you to the waitlist.</span></li>
       <li><span class="consent-icon">&#x270D;&#xFE0F;</span><span>We'll add a short line to your <strong>future activity descriptions</strong> mentioning WON.</span></li>
@@ -263,6 +268,7 @@ body{overflow-x:hidden}
 </div>
 
 <script>
+// ── DATA ──────────────────────────────────────────────────────────────
 var POOR='#fd9363',FAIR='#f5c842',GOOD='#83e9d0';
 var HOURS=[
   {label:'06:00',feel:-2,temp:2, wind:18,gust:30,rainPct:10,rainMm:'0.1',score:42,icon:'&#x2601;&#xFE0F;'},
@@ -277,135 +283,202 @@ var HOURS=[
 ];
 var N=HOURS.length;
 
-function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
-function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+// ── SCROLL ZONES ──────────────────────────────────────────────────────
+// Total: 4000vh
+// 0        → 2vh   : intro
+// 2vh      → 3vh   : zoom transition
+// 3vh      → 3+N*3 : hours (3vh each = 27vh)
+// 3+N*3    → end   : outro
+var VPH = 2;        // intro viewport-heights
+var ZOOM_H = 1;     // zoom transition
+var HR_H = 3;       // viewport-heights per hour
+var INTRO_END, ZOOM_END, HOURS_END;
 
-// Build hours sidebar
-var col=document.getElementById('hoursCol');
-HOURS.forEach(function(h,i){
-  var el=document.createElement('div');
-  el.className='htick'+(i===0?' active':'');
-  el.textContent=h.label;
+function calcZones() {
+  var vh = window.innerHeight;
+  INTRO_END = vh * VPH;
+  ZOOM_END  = vh * (VPH + ZOOM_H);
+  HOURS_END = vh * (VPH + ZOOM_H + N * HR_H);
+}
+
+// ── BUILD HOURS SIDEBAR ───────────────────────────────────────────────
+var col = document.getElementById('hoursCol');
+HOURS.forEach(function(h, i) {
+  var el = document.createElement('div');
+  el.className = 'htick' + (i === 0 ? ' active' : '');
+  el.textContent = h.label;
   col.appendChild(el);
 });
 
-var lastIdx=-1;
-function flip(el,html){
+// ── REFS ──────────────────────────────────────────────────────────────
+var sceneIntro  = document.getElementById('scene-intro');
+var sceneHours  = document.getElementById('scene-hours');
+var sceneOutro  = document.getElementById('scene-outro');
+var stickyCta   = document.getElementById('sticky-cta');
+var zOverlay    = document.getElementById('zoom-overlay');
+var zThumb      = document.getElementById('zthumb');
+var hBg         = document.getElementById('hBg');
+var wIconEl     = document.getElementById('wIcon');
+var lastIdx     = -1;
+var startRect   = null;
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function lerp(a,b,t){return a+(b-a)*t}
+function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
+function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
+
+function show(el){el.style.opacity='1';el.style.pointerEvents='all'}
+function hide(el){el.style.opacity='0';el.style.pointerEvents='none'}
+
+function flip(el, html) {
   el.classList.remove('flip');
   void el.offsetWidth;
-  el.innerHTML=html;
+  el.innerHTML = html;
   el.classList.add('flip');
 }
-function updateHour(idx){
-  if(idx===lastIdx) return;
-  lastIdx=idx;
-  var h=HOURS[idx];
-  document.getElementById('hBg').style.background=scoreColor(h.score);
-  document.getElementById('wIcon').innerHTML=h.icon;
-  flip(document.getElementById('mFeel'),h.feel+'<span class="munit">&#xB0;</span>');
-  flip(document.getElementById('mTemp'),h.temp+'<span class="munit">&#xB0;</span>');
-  flip(document.getElementById('mWind'),h.wind+'<span class="munit">W</span>');
-  flip(document.getElementById('mGust'),h.gust+'<span class="munit">W</span>');
-  flip(document.getElementById('mRainPct'),String(h.rainPct));
-  flip(document.getElementById('mRainMm'),String(h.rainMm));
-  document.querySelectorAll('.htick').forEach(function(t,i){
-    t.classList.toggle('active',i===idx);
+
+function captureThumb() {
+  var r = zThumb.getBoundingClientRect();
+  startRect = {left:r.left, top:r.top, width:r.width, height:r.height};
+}
+
+function destRect() {
+  return {left:534, top:85, width:611, height:786};
+}
+
+function updateHour(idx) {
+  if (idx === lastIdx) return;
+  lastIdx = idx;
+  var h = HOURS[idx];
+  hBg.style.background = scoreColor(h.score);
+  wIconEl.innerHTML = h.icon;
+  flip(document.getElementById('mFeel'),    h.feel    + '<span class="munit">&#xB0;</span>');
+  flip(document.getElementById('mTemp'),    h.temp    + '<span class="munit">&#xB0;</span>');
+  flip(document.getElementById('mWind'),    h.wind    + '<span class="munit">W</span>');
+  flip(document.getElementById('mGust'),    h.gust    + '<span class="munit">W</span>');
+  flip(document.getElementById('mRainPct'), String(h.rainPct));
+  flip(document.getElementById('mRainMm'),  String(h.rainMm));
+  document.querySelectorAll('.htick').forEach(function(t, i) {
+    t.classList.toggle('active', i === idx);
   });
 }
 
-// Scene refs
-var sceneIntro=document.getElementById('scene-intro');
-var sceneHours=document.getElementById('scene-hours');
-var sceneOutro=document.getElementById('scene-outro');
-var stickyCta=document.getElementById('sticky-cta');
-var progress=document.getElementById('progress');
+// ── ZOOM ANIMATION ────────────────────────────────────────────────────
+function applyZoom(p) {
+  if (p <= 0) {
+    zOverlay.style.opacity = '0';
+    zThumb.style.opacity = '1';
+    return;
+  }
+  if (p >= 1) {
+    zOverlay.style.opacity = '0';
+    zThumb.style.opacity = '0';
+    return;
+  }
+  if (!startRect) captureThumb();
+  var t = ease(p);
+  var dr = destRect();
+  zThumb.style.opacity = String(1 - p * 3);
+  zOverlay.style.opacity = '1';
+  zOverlay.style.left   = lerp(startRect.left,   dr.left,   t) + 'px';
+  zOverlay.style.top    = lerp(startRect.top,    dr.top,    t) + 'px';
+  zOverlay.style.width  = lerp(startRect.width,  dr.width,  t) + 'px';
+  zOverlay.style.height = lerp(startRect.height, dr.height, t) + 'px';
+  zOverlay.style.borderRadius = lerp(6, 0, t) + 'px';
+}
 
-function show(el){el.classList.add('active')}
-function hide(el){el.classList.remove('active')}
+// ── MAIN SCROLL ───────────────────────────────────────────────────────
+function onScroll() {
+  var sy = window.scrollY;
+  calcZones();
 
-// Scroll zones (out of 1200vh total):
-// 0–10vh   = intro
-// 10–20vh  = intro fade / transition
-// 20–110vh = hours (9 hours × 10vh each)
-// 110–120vh = outro
-
-function onScroll(){
-  var sy=window.scrollY;
-  var vh=window.innerHeight;
-  var total=document.getElementById('spacer').offsetHeight;
-  var pct=sy/total;
-  progress.style.width=(pct*100)+'%';
-
-  var introEnd=vh*2;
-  var hoursStart=vh*2;
-  var hoursEnd=vh*(2+N*3); // 3vh per hour
-  var outroStart=hoursEnd;
-
-  if(sy<introEnd){
+  // INTRO
+  if (sy < INTRO_END) {
     show(sceneIntro);
     hide(sceneHours);
     hide(sceneOutro);
     hide(stickyCta);
-    // Fade intro in last 2vh before hours
-    var fadeStart=introEnd-vh*0.8;
-    if(sy>fadeStart){
-      sceneIntro.style.opacity=String(1-((sy-fadeStart)/(vh*2)));
-    } else {
-      sceneIntro.style.opacity='1';
-    }
+    applyZoom(0);
+    captureThumb();
+    sceneIntro.style.opacity = '1';
     return;
   }
 
-  sceneIntro.style.opacity='0';
+  // ZOOM TRANSITION
+  if (sy < ZOOM_END) {
+    var p = (sy - INTRO_END) / (ZOOM_END - INTRO_END);
+    sceneIntro.style.opacity = String(clamp(1 - p * 2, 0, 1));
+    show(sceneIntro);
+    hide(sceneHours);
+    hide(sceneOutro);
+    applyZoom(p);
+    return;
+  }
+
+  // HOURS
   hide(sceneIntro);
+  applyZoom(1);
   stickyCta.classList.add('visible');
 
-  if(sy>=outroStart){
-    hide(sceneHours);
-    show(sceneOutro);
+  if (sy < HOURS_END) {
+    show(sceneHours);
+    hide(sceneOutro);
+    var idx = clamp(Math.floor((sy - ZOOM_END) / (window.innerHeight * HR_H)), 0, N - 1);
+    updateHour(idx);
     return;
   }
 
-  // Hours phase
-  show(sceneHours);
-  hide(sceneOutro);
-  var idx=clamp(Math.floor((sy-hoursStart)/(vh*3)),0,N-1);
-  updateHour(idx);
+  // OUTRO
+  hide(sceneHours);
+  show(sceneOutro);
 }
 
-window.scrollTo(0,0);
-window.addEventListener('scroll',onScroll,{passive:true});
+// ── INIT ──────────────────────────────────────────────────────────────
+calcZones();
+window.scrollTo(0, 0);
+setTimeout(captureThumb, 100);
+window.addEventListener('resize', calcZones);
+window.addEventListener('scroll', onScroll, {passive: true});
 onScroll();
 updateHour(0);
 
-// Strava
-var CLIENT_ID='YOUR_CLIENT_ID';
+// ── STRAVA ────────────────────────────────────────────────────────────
+var CLIENT_ID = 'YOUR_CLIENT_ID';
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-document.getElementById('stravaBtn').addEventListener('click',function(){openModal('consent-modal')});
-document.getElementById('consentClose').addEventListener('click',function(){closeModal('consent-modal')});
-document.getElementById('consentCancel').addEventListener('click',function(){closeModal('consent-modal')});
-document.getElementById('consent-modal').addEventListener('click',function(e){if(e.target===this)closeModal('consent-modal')});
-document.getElementById('consentConfirm').addEventListener('click',function(){
+
+document.getElementById('stravaBtn').addEventListener('click', function(){openModal('consent-modal')});
+document.getElementById('consentClose').addEventListener('click', function(){closeModal('consent-modal')});
+document.getElementById('consentCancel').addEventListener('click', function(){closeModal('consent-modal')});
+document.getElementById('consent-modal').addEventListener('click', function(e){if(e.target===this)closeModal('consent-modal')});
+document.getElementById('consentConfirm').addEventListener('click', function(){
   closeModal('consent-modal');
-  var p=new URLSearchParams({client_id:CLIENT_ID,redirect_uri:window.location.origin+window.location.pathname,response_type:'code',approval_prompt:'auto',scope:'read,activity:write'});
-  window.location.href='https://www.strava.com/oauth/authorize?'+p;
+  var p = new URLSearchParams({
+    client_id: CLIENT_ID,
+    redirect_uri: window.location.origin + window.location.pathname,
+    response_type: 'code', approval_prompt: 'auto', scope: 'read,activity:write'
+  });
+  window.location.href = 'https://www.strava.com/oauth/authorize?' + p;
 });
-document.getElementById('modalClose').addEventListener('click',function(){closeModal('strava-modal')});
-document.getElementById('strava-modal').addEventListener('click',function(e){if(e.target===this)closeModal('strava-modal')});
+document.getElementById('modalClose').addEventListener('click', function(){closeModal('strava-modal')});
+document.getElementById('strava-modal').addEventListener('click', function(e){if(e.target===this)closeModal('strava-modal')});
+
 (function(){
-  var params=new URLSearchParams(window.location.search);
-  var code=params.get('code');
-  if(!code) return;
-  window.history.replaceState({},'',window.location.pathname);
-  fetch('/.netlify/functions/strava-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
-    .then(function(r){return r.json()})
-    .then(function(a){
-      document.getElementById('modalName').textContent=a.firstname+' '+a.lastname;
-      var av=document.getElementById('modalAvatar');
-      if(a.profile_medium){av.src=a.profile_medium;av.style.display='block'}
-      openModal('strava-modal');
-    }).catch(function(e){console.error(e)});
+  var params = new URLSearchParams(window.location.search);
+  var code = params.get('code');
+  if (!code) return;
+  window.history.replaceState({}, '', window.location.pathname);
+  fetch('/.netlify/functions/strava-auth', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({code: code})
+  }).then(function(r){return r.json()}).then(function(a){
+    document.getElementById('modalName').textContent = a.firstname + ' ' + a.lastname;
+    var av = document.getElementById('modalAvatar');
+    if (a.profile_medium){av.src = a.profile_medium; av.style.display = 'block'}
+    openModal('strava-modal');
+  }).catch(function(e){console.error(e)});
 })();
 </script>
 </body>
