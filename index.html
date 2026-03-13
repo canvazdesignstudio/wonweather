@@ -682,14 +682,7 @@ HOURS.forEach((h, i) => {
 const zThumb = document.getElementById('zthumb');
 
 
-const allChars = [...c1, ...c2a, ...c2b, ...c3];
-allChars.forEach(c => c.classList.add('anim'));
-[tMid, zThumb, tBR].forEach(t => t.classList.add('anim'));
 
-let td = 300;
-allChars.forEach(c => { setTimeout(() => c.classList.add('on'), td); td += 38 + Math.random()*22; });
-[tMid, zThumb, tBR].forEach((t, i) => setTimeout(() => t.classList.add('on'), 550 + i*340));
-setTimeout(() => { cur.style.display = 'none'; }, td + 400);
 
 /* ─────────────────────────────────────────────
    ZOOM OVERLAY ENGINE
@@ -732,7 +725,7 @@ function applyZoom(p) {
     // Before zoom: overlay invisible, zThumb visible normally
     zOverlay.style.opacity = '0';
     zThumb.classList.remove('hidden');
-    iHL.style.opacity = '1';
+    document.getElementById('i-headline').style.opacity = '1';
     document.querySelector('.i-nav').style.opacity = '1';
     document.getElementById('scroll-cue').style.opacity = '';
     return;
@@ -764,7 +757,7 @@ function applyZoom(p) {
   // Fade label and headline
   ztLabel.style.opacity = String(clamp(1 - p * 5, 0, 1));
   const hlOp = clamp(1 - p * 2.5, 0, 1);
-  iHL.style.opacity = hlOp;
+  document.getElementById('i-headline').style.opacity = hlOp;
   document.querySelector('.i-nav').style.opacity = String(hlOp);
   document.getElementById('scroll-cue').style.opacity = String(hlOp);
 }
