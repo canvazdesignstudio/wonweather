@@ -10,7 +10,7 @@
 html,body{width:100%;background:#fff}
 body{overflow-x:hidden}
 
-#spacer{height:4000vh}
+#spacer{height:1400vh}
 
 .scene{
   position:fixed;inset:0;width:100%;height:100vh;
@@ -291,7 +291,7 @@ var N=HOURS.length;
 // 3+N*3    → end   : outro
 var VPH = 2;        // intro viewport-heights
 var ZOOM_H = 1;     // zoom transition
-var HR_H = 3;       // viewport-heights per hour
+var HR_H = 1;       // viewport-heights per hour
 var INTRO_END, ZOOM_END, HOURS_END;
 
 function calcZones() {
@@ -419,7 +419,7 @@ function onScroll() {
   // HOURS
   hide(sceneIntro);
   applyZoom(1);
-  stickyCta.classList.add('visible');
+  stickyCta.style.transform='translateX(0)';
 
   if (sy < HOURS_END) {
     show(sceneHours);
