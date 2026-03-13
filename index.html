@@ -61,17 +61,24 @@ html, body {
 }
 .i-row { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 1.5vw, 14px); }
 
-.ch { display: inline; opacity: 1; position: relative; top: 0; }
+.ch { display: inline; opacity: 1; position: relative; top: 0; transition: opacity 0.06s, top 0.1s; }
+.ch.anim { opacity: 0; top: 10px; }
+.ch.anim.on { opacity: 1; top: 0; }
 
 .cursor {
-  display: none;
+  display: inline-block; width: 4px; height: 0.8em;
+  background: var(--black); vertical-align: middle; margin-left: 2px;
+  animation: blink 0.65s step-end infinite;
 }
 @keyframes blink { 50% { opacity: 0; } }
 
 .sthumb {
   display: inline-flex; flex-direction: column; flex-shrink: 0;
   opacity: 1; transform: scale(1) rotate(0deg);
+  transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34,1.5,0.64,1);
 }
+.sthumb.anim { opacity: 0; transform: scale(0.55) rotate(-5deg); }
+.sthumb.anim.on { opacity: 1; transform: scale(1) rotate(0deg); }
 .sthumb .tt {
   font-family: 'Manrope', sans-serif; font-weight: 700;
   font-size: clamp(8px, 1.5vw, 11px); color: var(--black); margin-bottom: 2px;
@@ -81,7 +88,10 @@ html, body {
 #zthumb {
   display: inline-flex; flex-direction: column; flex-shrink: 0;
   opacity: 1; transform: scale(1) rotate(0deg);
+  transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34,1.5,0.64,1);
 }
+#zthumb.anim { opacity: 0; transform: scale(0.55) rotate(-5deg); }
+#zthumb.anim.on { opacity: 1; transform: scale(1) rotate(0deg); }
 #zthumb.hidden { opacity: 0 !important; transition: none; }
 #zthumb .tt {
   font-family: 'Manrope', sans-serif; font-weight: 700;
@@ -729,7 +739,16 @@ iHL.appendChild(r3);
 
 const cur = document.createElement('span'); cur.className = 'cursor'; r3.appendChild(cur);
 
-// No typing animation — all text visible immediately
+// Animate typing — add .anim first (hides), then stagger .on (reveals)
+// If JS fails at any point, text stays visible (no .anim class = visible by default)
+const allChars = [...c1, ...c2a, ...c2b, ...c3];
+allChars.forEach(c => c.classList.add('anim'));
+[tMid, zThumb, tBR].forEach(t => t.classList.add('anim'));
+
+let td = 300;
+allChars.forEach(c => { setTimeout(() => c.classList.add('on'), td); td += 38 + Math.random()*22; });
+[tMid, zThumb, tBR].forEach((t, i) => setTimeout(() => t.classList.add('on'), 550 + i*340));
+setTimeout(() => { cur.style.display = 'none'; }, td + 400);
 
 /* ─────────────────────────────────────────────
    ZOOM OVERLAY ENGINE
