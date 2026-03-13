@@ -678,73 +678,10 @@ HOURS.forEach((h, i) => {
 /* ─────────────────────────────────────────────
    BUILD INTRO HEADLINE
 ───────────────────────────────────────────── */
-const iHL = document.getElementById('i-headline');
+// Headline is static HTML
+const zThumb = document.getElementById('zthumb');
 
-function chars(text) {
-  return [...text].map(c => {
-    const s = document.createElement('span');
-    s.className = 'ch';
-    s.textContent = c === ' ' ? '\u00A0' : c;
-    return s;
-  });
-}
 
-function makeVid(src, w, h) {
-  const v = document.createElement('video');
-  v.src = src; v.width = w; v.height = h;
-  v.autoplay = true; v.loop = true; v.muted = true;
-  v.playsInline = true; v.setAttribute('playsinline', '');
-  v.style.cssText = 'display:block;object-fit:cover;border-radius:5px;';
-  // If video fails to load, hide it gracefully — don't break layout
-  v.onerror = () => { v.style.display = 'none'; };
-  return v;
-}
-
-function sthumb(src, w, h, label) {
-  const wrap = document.createElement('div'); wrap.className = 'sthumb';
-  const t = document.createElement('div'); t.className = 'tt'; t.textContent = label;
-  wrap.appendChild(t); wrap.appendChild(makeVid(src, w, h));
-  return wrap;
-}
-
-// Responsive thumb sizes
-const mob = window.innerWidth <= 768;
-const T1W = mob ? 65 : 110, T1H = mob ? 46 : 78;
-const T2W = mob ? 88 : 128, T2H = mob ? 64 : 92;
-const ZTW = mob ? 88 : 150, ZTH = mob ? 64 : 108;
-
-// Row 1 — "weather or"
-const r1 = document.createElement('div'); r1.className = 'i-row';
-const c1 = chars('weather or'); c1.forEach(c => r1.appendChild(c));
-iHL.appendChild(r1);
-
-// Row 2 — "not, [thumb] here"
-const r2 = document.createElement('div'); r2.className = 'i-row';
-const c2a = chars('not,\u00A0'); c2a.forEach(c => r2.appendChild(c));
-const tMid = sthumb(VIDEO_1, T1W, T1H, '10:00'); r2.appendChild(tMid);
-const c2b = chars('\u00A0here'); c2b.forEach(c => r2.appendChild(c));
-iHL.appendChild(r2);
-
-// Row 3 — [ZOOM thumb] "i come" [thumb]
-const r3 = document.createElement('div'); r3.className = 'i-row';
-
-// The zoom thumb lives in the headline layout.
-// A fixed-position clone (#zoom-overlay) mirrors it exactly,
-// then animates to fill the runner panel.
-const zThumb = document.createElement('div'); zThumb.id = 'zthumb';
-const zt = document.createElement('div'); zt.className = 'tt'; zt.textContent = '10:00';
-const zi = makeVid(RUNNER, ZTW, ZTH);
-zThumb.appendChild(zt); zThumb.appendChild(zi);
-r3.appendChild(zThumb);
-
-const c3 = chars('\u00A0i come\u00A0'); c3.forEach(c => r3.appendChild(c));
-const tBR = sthumb(VIDEO_2, T2W, T2H, '10:00'); r3.appendChild(tBR);
-iHL.appendChild(r3);
-
-const cur = document.createElement('span'); cur.className = 'cursor'; r3.appendChild(cur);
-
-// Animate typing — add .anim first (hides), then stagger .on (reveals)
-// If JS fails at any point, text stays visible (no .anim class = visible by default)
 const allChars = [...c1, ...c2a, ...c2b, ...c3];
 allChars.forEach(c => c.classList.add('anim'));
 [tMid, zThumb, tBR].forEach(t => t.classList.add('anim'));
