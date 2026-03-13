@@ -213,6 +213,8 @@ html, body { width: 100%; overflow-x: hidden; background: var(--white); }
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+
 const POOR = '#fd9363', FAIR = '#f5c842', GOOD = '#83e9d0';
 const HOURS = [
   { label:'06:00', feel:-2, temp:2,  wind:18, gust:30, rainPct:10, rainMm:'0.1', score:42, icon:'☁️' },
@@ -386,6 +388,7 @@ document.getElementById('consentConfirm').addEventListener('click', () => {
 
 document.getElementById('modalClose').addEventListener('click', () => document.getElementById('strava-modal').classList.remove('open'));
 document.getElementById('strava-modal').addEventListener('click', e => { if (e.target === document.getElementById('strava-modal')) document.getElementById('strava-modal').classList.remove('open'); });
+}); // DOMContentLoaded
 </script>
 </body>
 </html>
