@@ -42,7 +42,7 @@ body{overflow-x:hidden}
 /* ── ZOOM OVERLAY — animates from thumb to runner position ── */
 #zoom-overlay{
   position:fixed;overflow:hidden;border-radius:6px;
-  pointer-events:none;z-index:8;opacity:0;
+  pointer-events:none;z-index:4;opacity:0;
   will-change:left,top,width,height;
 }
 #zoom-overlay video{
@@ -319,7 +319,7 @@ function destRect(){
   var h=Math.round(vh*0.88);
   var w=Math.round(h*611/786);
   var top=Math.round((vh-h)/2);
-  return{left:534,top:top,width:w,height:h};
+  return{left:445,top:top,width:w,height:h};
 }
 
 function flip(el,html){
