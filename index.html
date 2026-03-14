@@ -82,10 +82,10 @@ body{overflow-x:hidden}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
 #runner-panel{
-  position:absolute;left:534px;top:85px;width:611px;height:786px;
+  position:absolute;left:534px;top:50%;transform:translateY(-50%);width:min(611px,calc(100vw - 540px));height:min(786px,90vh);
   overflow:hidden;z-index:6;
 }
-#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block}
+#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
@@ -371,7 +371,7 @@ function applyZoom(p) {
     zThumb.style.opacity = '1';
     return;
   }
-  if (p >= 1) {
+  if (p >= 0.85) {
     zOverlay.style.opacity = '0';
     zThumb.style.opacity = '0';
     return;
