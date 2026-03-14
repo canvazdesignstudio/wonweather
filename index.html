@@ -9,14 +9,13 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;background:#fff}
 body{overflow-x:hidden}
-
 #spacer{height:1400vh}
 
 .scene{position:fixed;inset:0;width:100%;height:100vh;opacity:0;pointer-events:none;overflow:hidden}
 .scene.active{opacity:1;pointer-events:all}
 
-/* ── INTRO ── */
-#scene-intro{background:#fff;z-index:10;transition:opacity 0.5s ease}
+/* INTRO */
+#scene-intro{background:#fff;z-index:10;transition:opacity 0.4s ease}
 .logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000;position:absolute;top:24px;left:32px;z-index:2}
 #i-headline{
   position:absolute;inset:0;
@@ -39,20 +38,17 @@ body{overflow-x:hidden}
 }
 #scroll-cue::after{content:'';display:block;width:1px;height:36px;background:rgba(0,0,0,0.2)}
 
-/* ── ZOOM OVERLAY — animates from thumb to runner position ── */
+/* ZOOM OVERLAY — position:fixed, above everything during animation, then hidden */
 #zoom-overlay{
-  position:fixed;overflow:hidden;border-radius:6px;
-  pointer-events:none;z-index:6;opacity:0;
-  will-change:left,top,width,height;
+  position:fixed;overflow:hidden;
+  pointer-events:none;
+  opacity:0;
+  z-index:9; /* above scene-hours(5) and below scene-intro(10) */
 }
-#zoom-overlay video{
-  width:100%;height:100%;
-  object-fit:cover;
-  display:block;
-}
+#zoom-overlay video{width:100%;height:100%;object-fit:cover;display:block}
 
-/* ── HOURS ── */
-#scene-hours{z-index:5;transition:opacity 0.3s ease}
+/* HOURS */
+#scene-hours{z-index:5}
 .h-bg{position:absolute;inset:0;background:#fd9363;transition:background 0.6s ease;z-index:0}
 #scene-hours::after{
   content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -60,21 +56,27 @@ body{overflow-x:hidden}
 }
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
 
-/* Runner video — fixed position behind metrics, z-index:4 */
-#runner-panel{display:none}
+/* RUNNER PANEL — inside scene-hours, z-index:2, behind metrics */
+#runner-panel{
+  position:absolute;
+  left:445px;
+  top:50%;transform:translateY(-50%);
+  width:500px;height:88vh;
+  overflow:hidden;z-index:2;
+}
+#runner-panel video{width:100%;height:100%;object-fit:cover;display:block}
 
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
-  font-family:'Manrope',sans-serif;font-weight:700;z-index:15
+  font-family:'Manrope',sans-serif;font-weight:700;z-index:10
 }
 .htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s,color 0.25s}
 .htick.active{font-size:72px;color:#000;line-height:0.9}
-
 .metrics-grid{
   position:absolute;left:270px;top:90px;
   display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
-  z-index:15
+  z-index:10
 }
 .mcell{display:flex;flex-direction:column;justify-content:center;padding:0 0 0 20px}
 .mlrow{display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -85,16 +87,15 @@ body{overflow-x:hidden}
 .munit{font-size:26px}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
-
-.w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:15}
+.w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
-  display:flex;align-items:center;z-index:15;padding-left:270px
+  display:flex;align-items:center;z-index:10;padding-left:270px
 }
 .h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
 
-/* ── OUTRO ── */
-#scene-outro{background:#83e9d0;z-index:5;transition:opacity 0.5s ease}
+/* OUTRO */
+#scene-outro{background:#83e9d0;z-index:5}
 #scene-outro::before{
   content:'';position:absolute;inset:0;pointer-events:none;
   background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)
@@ -106,7 +107,7 @@ body{overflow-x:hidden}
 .o-hl{font-family:'Gabarito',sans-serif;font-weight:700;font-size:clamp(52px,8vw,120px);line-height:0.93;color:#000}
 .o-sub{margin-top:44px;font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:rgba(0,0,0,0.65);max-width:400px}
 
-/* ── CTA ── */
+/* CTA */
 #sticky-cta{
   position:fixed;bottom:0;right:0;width:590px;height:186px;
   background:#000;display:flex;flex-direction:column;
@@ -118,7 +119,7 @@ body{overflow-x:hidden}
 .strava-btn{display:flex;align-items:center;gap:10px;background:#FC4C02;border:none;border-radius:4px;padding:12px 22px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;color:#fff}
 .strava-btn svg{width:20px;height:20px}
 
-/* ── MODALS ── */
+/* MODALS */
 .modal-overlay{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal-box{background:#fff;width:480px;max-width:90vw;padding:48px 44px;position:relative}
@@ -168,7 +169,7 @@ body{overflow-x:hidden}
   <div id="scroll-cue">scroll</div>
 </div>
 
-<!-- ZOOM OVERLAY: fixed, outside all scenes -->
+<!-- ZOOM OVERLAY: lives outside scenes, animates from thumb to runner position -->
 <div id="zoom-overlay">
   <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
 </div>
@@ -177,6 +178,7 @@ body{overflow-x:hidden}
 <div id="scene-hours" class="scene">
   <div class="h-bg" id="hBg"></div>
   <div class="logo h-logo">WON</div>
+  <!-- Runner panel: behind metrics, same position as zoom overlay destination -->
   <div id="runner-panel">
     <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
   </div>
@@ -298,14 +300,14 @@ HOURS.forEach(function(h,i){
   col.appendChild(el);
 });
 
-var sceneIntro  = document.getElementById('scene-intro');
-var sceneHours  = document.getElementById('scene-hours');
-var sceneOutro  = document.getElementById('scene-outro');
-var stickyCta   = document.getElementById('sticky-cta');
-var zOverlay    = document.getElementById('zoom-overlay');
-var zThumb      = document.getElementById('zthumb');
-var hBg         = document.getElementById('hBg');
-var runnerPanel = document.getElementById('runner-panel');
+var sceneIntro = document.getElementById('scene-intro');
+var sceneHours = document.getElementById('scene-hours');
+var sceneOutro = document.getElementById('scene-outro');
+var stickyCta  = document.getElementById('sticky-cta');
+var zOverlay   = document.getElementById('zoom-overlay');
+var zThumb     = document.getElementById('zthumb');
+var runnerPanel= document.getElementById('runner-panel');
+var hBg        = document.getElementById('hBg');
 var lastIdx=-1, ctaShown=false, startRect=null;
 
 function captureThumb(){
@@ -313,11 +315,11 @@ function captureThumb(){
   startRect={left:r.left,top:r.top,width:r.width,height:r.height};
 }
 
-// Destination = runner panel's actual position on screen
+// Destination matches #runner-panel CSS exactly
 function destRect(){
   var vh=window.innerHeight;
   var h=Math.round(vh*0.88);
-  var w=Math.round(h*611/786);
+  var w=500; // matches runner-panel width
   var top=Math.round((vh-h)/2);
   return{left:445,top:top,width:w,height:h};
 }
@@ -349,10 +351,10 @@ function onScroll(){
   var zoomEnd  = vh*(VPH+ZOOM_H);
   var hoursEnd = vh*(VPH+ZOOM_H+N*HR_H);
 
-  // INTRO
-  if(sy<introEnd){
+  // INTRO — show intro, hide everything else
+  if(sy < introEnd){
     show(sceneIntro);
-    sceneIntro.style.opacity=String(clamp(1-(sy/(introEnd*0.8)-0.75)*4,0,1));
+    sceneIntro.style.opacity='1';
     hide(sceneHours);
     hide(sceneOutro);
     zOverlay.style.opacity='0';
@@ -361,46 +363,40 @@ function onScroll(){
     return;
   }
 
-  // ZOOM
-  if(sy<zoomEnd){
+  // ZOOM — intro fades, hours bg fades in, video zooms
+  if(sy < zoomEnd){
     var p=(sy-introEnd)/(zoomEnd-introEnd);
     var t=ease(p);
-    if(!startRect)captureThumb();
+    if(!startRect) captureThumb();
     var dr=destRect();
 
-    // Show hours scene underneath so background color is ready
+    // Fade intro out
+    sceneIntro.style.opacity=String(clamp(1-p*2,0,1));
+    if(p>0.5) hide(sceneIntro); else show(sceneIntro);
+
+    // Fade hours bg in (just background, no metrics yet)
     show(sceneHours);
-    sceneHours.style.opacity=String(clamp(p*3,0,1));
-    hide(sceneOutro);
+    sceneHours.style.opacity=String(clamp(p*2,0,1));
 
-    // Fade intro text
-    sceneIntro.style.opacity=String(clamp(1-p*3,0,1));
-    if(p>0.3){hide(sceneIntro);}else{show(sceneIntro);}
-
-    // Animate overlay
-    zThumb.style.opacity=String(clamp(1-p*4,0,1));
+    // Zoom overlay — pure zoom, no fade
+    zThumb.style.opacity=String(clamp(1-p*3,0,1));
     zOverlay.style.opacity='1';
     zOverlay.style.left  =lerp(startRect.left,  dr.left,  t)+'px';
     zOverlay.style.top   =lerp(startRect.top,   dr.top,   t)+'px';
     zOverlay.style.width =lerp(startRect.width, dr.width, t)+'px';
     zOverlay.style.height=lerp(startRect.height,dr.height,t)+'px';
-    zOverlay.style.borderRadius=lerp(6,0,t)+'px';
+    zOverlay.style.borderRadius=lerp(5,0,t)+'px';
     return;
   }
 
-  // HOURS — overlay stays at destRect position
+  // HOURS — overlay gone, runner panel underneath is identical so seamless
   hide(sceneIntro);
-  var dr=destRect();
-  zOverlay.style.left=dr.left+'px';
-  zOverlay.style.top=dr.top+'px';
-  zOverlay.style.width=dr.width+'px';
-  zOverlay.style.height=dr.height+'px';
-  zOverlay.style.borderRadius='0';
-  zOverlay.style.opacity='1';
+  zOverlay.style.opacity='0';
   zThumb.style.opacity='0';
 
-  if(sy<hoursEnd){
+  if(sy < hoursEnd){
     show(sceneHours);
+    sceneHours.style.opacity='1';
     hide(sceneOutro);
     var idx=clamp(Math.floor((sy-zoomEnd)/(vh*HR_H)),0,N-1);
     updateHour(idx);
@@ -410,7 +406,6 @@ function onScroll(){
 
   // OUTRO
   hide(sceneHours);
-  zOverlay.style.opacity='0';
   show(sceneOutro);
   if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
 }
