@@ -319,6 +319,7 @@ var zThumb      = document.getElementById('zthumb');
 var hBg         = document.getElementById('hBg');
 var wIconEl     = document.getElementById('wIcon');
 var lastIdx     = -1;
+var ctaShown    = false;
 var startRect   = null;
 
 // ── HELPERS ───────────────────────────────────────────────────────────
@@ -417,7 +418,7 @@ function onScroll() {
   // HOURS
   hide(sceneIntro);
   applyZoom(1);
-  stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';
+  if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
 
   if (sy < HOURS_END) {
     show(sceneHours);
@@ -430,6 +431,7 @@ function onScroll() {
   // OUTRO
   hide(sceneHours);
   show(sceneOutro);
+  if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
