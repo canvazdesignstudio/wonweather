@@ -47,7 +47,7 @@ body{overflow-x:hidden}
 /* ── ZOOM OVERLAY ── */
 #zoom-overlay{
   position:fixed;overflow:hidden;
-  pointer-events:none;z-index:8;
+  pointer-events:none;z-index:6;
 }
 #zoom-overlay video{width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block}
 
@@ -80,7 +80,11 @@ body{overflow-x:hidden}
 .munit{font-size:26px}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
-#runner-panel{display:none}
+#runner-panel{
+  position:absolute;left:534px;top:50%;transform:translateY(-50%);
+  width:min(500px,calc(100vw - 550px));height:88vh;
+  overflow:hidden;z-index:4;
+}
 #runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block}
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
@@ -341,15 +345,11 @@ function captureThumb() {
 
 function destRect() {
   var vh = window.innerHeight;
-  var vw = window.innerWidth;
-  var metricsEnd = 540;
-  var availW = vw - metricsEnd - 200; // leave room for CTA
-  var h = Math.min(Math.round(vh * 0.85), 786);
-  var w = Math.round(h * 611/786);
-  if(w > availW){ w = availW; h = Math.round(w * 786/611); }
-  var left = metricsEnd + Math.round((vw - metricsEnd - 590 - w) / 2) + Math.round((vw - metricsEnd - 590) * 0.1);
+  var h = Math.min(Math.round(vh * 0.88), 786);
+  var w = Math.round(h * 611 / 786);
+  var left = 534; // left-aligned to right of metrics columns
   var top = Math.round((vh - h) / 2);
-  return {left:Math.max(metricsEnd, left), top:top, width:w, height:h};
+  return {left:left, top:top, width:w, height:h};
 }
 
 function updateHour(idx) {
@@ -443,6 +443,7 @@ function onScroll() {
   // OUTRO
   hide(sceneHours);
   show(sceneOutro);
+  zOverlay.style.opacity='0';
   if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
 }
 
