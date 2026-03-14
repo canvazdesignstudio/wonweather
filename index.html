@@ -47,9 +47,9 @@ body{overflow-x:hidden}
 /* ── ZOOM OVERLAY ── */
 #zoom-overlay{
   position:fixed;overflow:hidden;
-  pointer-events:none;z-index:20;
+  pointer-events:none;z-index:5;
 }
-#zoom-overlay video{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block}
+#zoom-overlay video{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block}
 
 /* ── HOURS ── */
 #scene-hours{z-index:5;transition:opacity 0.3s ease}
@@ -80,11 +80,8 @@ body{overflow-x:hidden}
 .munit{font-size:26px}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
-#runner-panel{
-  position:absolute;left:534px;top:50%;transform:translateY(-50%);width:min(611px,calc(100vw - 540px));height:min(786px,90vh);
-  overflow:hidden;z-index:6;opacity:0;
-}
-#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block}
+#runner-panel{display:none}
+#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block}
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
@@ -343,7 +340,15 @@ function captureThumb() {
 }
 
 function destRect() {
-  return {left:534, top:85, width:611, height:786};
+  var vh = window.innerHeight;
+  var vw = window.innerWidth;
+  var metricsEnd = 620;
+  var w = Math.min(500, vw - metricsEnd - 40);
+  var h = Math.min(Math.round(w * 786/611), vh - 100);
+  w = Math.round(h * 611/786);
+  var left = metricsEnd + Math.round((vw - metricsEnd - w) / 2);
+  var top = Math.round((vh - h) / 2);
+  return {left:left, top:top, width:w, height:h};
 }
 
 function updateHour(idx) {
