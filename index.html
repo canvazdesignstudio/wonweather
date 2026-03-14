@@ -41,8 +41,8 @@ body{overflow-x:hidden}
 
 /* ── ZOOM OVERLAY — animates from thumb to runner position ── */
 #zoom-overlay{
-  position:absolute;overflow:hidden;border-radius:6px;
-  pointer-events:none;z-index:4;opacity:0;
+  position:fixed;overflow:hidden;border-radius:6px;
+  pointer-events:none;z-index:6;opacity:0;
   will-change:left,top,width,height;
 }
 #zoom-overlay video{
@@ -66,7 +66,7 @@ body{overflow-x:hidden}
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
-  font-family:'Manrope',sans-serif;font-weight:700;z-index:10
+  font-family:'Manrope',sans-serif;font-weight:700;z-index:15
 }
 .htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s,color 0.25s}
 .htick.active{font-size:72px;color:#000;line-height:0.9}
@@ -74,7 +74,7 @@ body{overflow-x:hidden}
 .metrics-grid{
   position:absolute;left:270px;top:90px;
   display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
-  z-index:10
+  z-index:15
 }
 .mcell{display:flex;flex-direction:column;justify-content:center;padding:0 0 0 20px}
 .mlrow{display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -86,10 +86,10 @@ body{overflow-x:hidden}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
 
-.w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
+.w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:15}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
-  display:flex;align-items:center;z-index:20;padding-left:270px
+  display:flex;align-items:center;z-index:15;padding-left:270px
 }
 .h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
 
@@ -168,13 +168,14 @@ body{overflow-x:hidden}
   <div id="scroll-cue">scroll</div>
 </div>
 
+<!-- ZOOM OVERLAY: fixed, outside all scenes -->
+<div id="zoom-overlay">
+  <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
+</div>
+
 <!-- SCENE: HOURS -->
 <div id="scene-hours" class="scene">
   <div class="h-bg" id="hBg"></div>
-  <!-- ZOOM OVERLAY inside hours scene -->
-  <div id="zoom-overlay">
-    <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
-  </div>
   <div class="logo h-logo">WON</div>
   <div id="runner-panel">
     <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
