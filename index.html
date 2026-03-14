@@ -384,9 +384,15 @@ function onScroll(){
     return;
   }
 
-  // HOURS — overlay gone, runner panel underneath is identical so seamless
+  // HOURS — keep overlay visible at dest position
   hide(sceneIntro);
-  zOverlay.style.opacity='0';
+  var dr=destRect();
+  zOverlay.style.left=dr.left+'px';
+  zOverlay.style.top=dr.top+'px';
+  zOverlay.style.width=dr.width+'px';
+  zOverlay.style.height=dr.height+'px';
+  zOverlay.style.borderRadius='0';
+  zOverlay.style.opacity='1';
   zThumb.style.opacity='0';
 
   if(sy < hoursEnd){
