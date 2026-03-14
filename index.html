@@ -12,11 +12,7 @@ body{overflow-x:hidden}
 
 #spacer{height:1400vh}
 
-.scene{
-  position:fixed;inset:0;width:100%;height:100vh;
-  opacity:0;pointer-events:none;
-  overflow:hidden;
-}
+.scene{position:fixed;inset:0;width:100%;height:100vh;opacity:0;pointer-events:none;overflow:hidden}
 .scene.active{opacity:1;pointer-events:all}
 
 /* ── INTRO ── */
@@ -29,7 +25,7 @@ body{overflow-x:hidden}
   font-size:clamp(36px,7.5vw,108px);line-height:1;color:#000;
 }
 .i-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
-.vid-thumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0;transition:opacity 0.3s}
+.vid-thumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
 .vid-thumb .tt{font-family:'Manrope',sans-serif;font-weight:700;font-size:11px;color:#000;margin-bottom:3px}
 .vid-thumb video{display:block;object-fit:cover;border-radius:5px;background:#ddd}
 #zthumb{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
@@ -39,17 +35,20 @@ body{overflow-x:hidden}
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;
   font-family:'Manrope',sans-serif;font-size:9px;font-weight:700;
-  letter-spacing:3px;text-transform:uppercase;color:rgba(0,0,0,0.3);
-  transition:opacity 0.4s;
+  letter-spacing:3px;text-transform:uppercase;color:rgba(0,0,0,0.3)
 }
 #scroll-cue::after{content:'';display:block;width:1px;height:36px;background:rgba(0,0,0,0.2)}
 
-/* ── ZOOM OVERLAY ── */
+/* ── ZOOM OVERLAY — animates from thumb to runner position ── */
 #zoom-overlay{
-  position:fixed;overflow:hidden;
-  pointer-events:none;z-index:6;
+  position:fixed;overflow:hidden;border-radius:6px;
+  pointer-events:none;z-index:15;opacity:0;
 }
-#zoom-overlay video{width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block}
+#zoom-overlay video{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center 40%;
+  display:block;
+}
 
 /* ── HOURS ── */
 #scene-hours{z-index:5;transition:opacity 0.3s ease}
@@ -59,13 +58,29 @@ body{overflow-x:hidden}
   background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 18px,rgba(0,0,0,0.025) 18px,rgba(0,0,0,0.025) 19px)
 }
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
+
+/* Runner video — fixed position behind metrics, z-index:4 */
+#runner-panel{
+  position:absolute;
+  left:534px;
+  top:50%;transform:translateY(-50%);
+  width:500px;height:88vh;
+  overflow:hidden;z-index:4;
+}
+#runner-panel video{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center 40%;
+  display:block;
+}
+
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
-  font-family:'Manrope',sans-serif;font-weight:700;z-index:10;
+  font-family:'Manrope',sans-serif;font-weight:700;z-index:10
 }
-.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s ease,color 0.25s ease}
+.htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s,color 0.25s}
 .htick.active{font-size:72px;color:#000;line-height:0.9}
+
 .metrics-grid{
   position:absolute;left:270px;top:90px;
   display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
@@ -80,12 +95,7 @@ body{overflow-x:hidden}
 .munit{font-size:26px}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
-#runner-panel{
-  position:absolute;left:534px;top:50%;transform:translateY(-50%);
-  width:min(500px,calc(100vw - 550px));height:88vh;
-  overflow:hidden;z-index:4;
-}
-#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block}
+
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
@@ -168,7 +178,7 @@ body{overflow-x:hidden}
   <div id="scroll-cue">scroll</div>
 </div>
 
-<!-- ZOOM OVERLAY -->
+<!-- ZOOM OVERLAY: animates the runner thumbnail to its final position -->
 <div id="zoom-overlay">
   <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
 </div>
@@ -177,6 +187,9 @@ body{overflow-x:hidden}
 <div id="scene-hours" class="scene">
   <div class="h-bg" id="hBg"></div>
   <div class="logo h-logo">WON</div>
+  <div id="runner-panel">
+    <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
+  </div>
   <div class="hours-col" id="hoursCol"></div>
   <div class="w-icon" id="wIcon">&#x2601;&#xFE0F;</div>
   <div class="metrics-grid">
@@ -204,9 +217,6 @@ body{overflow-x:hidden}
       <div class="mlrow"><div class="mdot"></div><div class="mlabel">rain <em>mm</em></div></div>
       <div class="mval" id="mRainMm">0.6</div>
     </div>
-  </div>
-  <div id="runner-panel">
-    <video id="runnerVid" src="videos/runner.mp4" autoplay loop muted playsinline></video>
   </div>
   <div class="h-bottom">
     <div class="h-tagline">the best time slots for you<br>to hit the ground running</div>
@@ -267,7 +277,6 @@ body{overflow-x:hidden}
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────
 var POOR='#fd9363',FAIR='#f5c842',GOOD='#83e9d0';
 var HOURS=[
   {label:'06:00',feel:-2,temp:2, wind:18,gust:30,rainPct:10,rainMm:'0.1',score:42,icon:'&#x2601;&#xFE0F;'},
@@ -281,35 +290,24 @@ var HOURS=[
   {label:'22:00',feel:1, temp:4, wind:16,gust:24,rainPct:15,rainMm:'0.3',score:82,icon:'&#x1F319;'}
 ];
 var N=HOURS.length;
+var VPH=2, ZOOM_H=1, HR_H=1;
 
-// ── SCROLL ZONES ──────────────────────────────────────────────────────
-// Total: 4000vh
-// 0        → 2vh   : intro
-// 2vh      → 3vh   : zoom transition
-// 3vh      → 3+N*3 : hours (3vh each = 27vh)
-// 3+N*3    → end   : outro
-var VPH = 2;        // intro viewport-heights
-var ZOOM_H = 1;     // zoom transition
-var HR_H = 1;       // viewport-heights per hour
-var INTRO_END, ZOOM_END, HOURS_END;
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function lerp(a,b,t){return a+(b-a)*t}
+function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
+function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
+function show(el){el.style.opacity='1';el.style.pointerEvents='all'}
+function hide(el){el.style.opacity='0';el.style.pointerEvents='none'}
 
-function calcZones() {
-  var vh = window.innerHeight;
-  INTRO_END = vh * VPH;
-  ZOOM_END  = vh * (VPH + ZOOM_H);
-  HOURS_END = vh * (VPH + ZOOM_H + N * HR_H);
-}
-
-// ── BUILD HOURS SIDEBAR ───────────────────────────────────────────────
-var col = document.getElementById('hoursCol');
-HOURS.forEach(function(h, i) {
-  var el = document.createElement('div');
-  el.className = 'htick' + (i === 0 ? ' active' : '');
-  el.textContent = h.label;
+// Build hours sidebar
+var col=document.getElementById('hoursCol');
+HOURS.forEach(function(h,i){
+  var el=document.createElement('div');
+  el.className='htick'+(i===0?' active':'');
+  el.textContent=h.label;
   col.appendChild(el);
 });
 
-// ── REFS ──────────────────────────────────────────────────────────────
 var sceneIntro  = document.getElementById('scene-intro');
 var sceneHours  = document.getElementById('scene-hours');
 var sceneOutro  = document.getElementById('scene-outro');
@@ -317,181 +315,139 @@ var stickyCta   = document.getElementById('sticky-cta');
 var zOverlay    = document.getElementById('zoom-overlay');
 var zThumb      = document.getElementById('zthumb');
 var hBg         = document.getElementById('hBg');
-var wIconEl     = document.getElementById('wIcon');
-var lastIdx     = -1;
-var ctaShown    = false;
-var startRect   = null;
+var runnerPanel = document.getElementById('runner-panel');
+var lastIdx=-1, ctaShown=false, startRect=null;
 
-// ── HELPERS ───────────────────────────────────────────────────────────
-function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
-function lerp(a,b,t){return a+(b-a)*t}
-function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
-function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
-
-function show(el){el.style.opacity='1';el.style.pointerEvents='all'}
-function hide(el){el.style.opacity='0';el.style.pointerEvents='none'}
-
-function flip(el, html) {
-  el.classList.remove('flip');
-  void el.offsetWidth;
-  el.innerHTML = html;
-  el.classList.add('flip');
+function captureThumb(){
+  var r=zThumb.getBoundingClientRect();
+  startRect={left:r.left,top:r.top,width:r.width,height:r.height};
 }
 
-function captureThumb() {
-  var r = zThumb.getBoundingClientRect();
-  startRect = {left:r.left, top:r.top, width:r.width, height:r.height};
+// Destination = runner panel's actual position on screen
+function destRect(){
+  var r=runnerPanel.getBoundingClientRect();
+  return{left:r.left,top:r.top,width:r.width,height:r.height};
 }
 
-function destRect() {
-  var vh = window.innerHeight;
-  var h = Math.min(Math.round(vh * 0.88), 786);
-  var w = Math.round(h * 611 / 786);
-  var left = 534; // left-aligned to right of metrics columns
-  var top = Math.round((vh - h) / 2);
-  return {left:left, top:top, width:w, height:h};
+function flip(el,html){
+  el.classList.remove('flip');void el.offsetWidth;
+  el.innerHTML=html;el.classList.add('flip');
 }
 
-function updateHour(idx) {
-  if (idx === lastIdx) return;
-  lastIdx = idx;
-  var h = HOURS[idx];
-  hBg.style.background = scoreColor(h.score);
-  wIconEl.innerHTML = h.icon;
-  flip(document.getElementById('mFeel'),    h.feel    + '<span class="munit">&#xB0;</span>');
-  flip(document.getElementById('mTemp'),    h.temp    + '<span class="munit">&#xB0;</span>');
-  flip(document.getElementById('mWind'),    h.wind    + '<span class="munit">W</span>');
-  flip(document.getElementById('mGust'),    h.gust    + '<span class="munit">W</span>');
+function updateHour(idx){
+  if(idx===lastIdx)return;
+  lastIdx=idx;
+  var h=HOURS[idx];
+  hBg.style.background=scoreColor(h.score);
+  document.getElementById('wIcon').innerHTML=h.icon;
+  flip(document.getElementById('mFeel'),    h.feel+'<span class="munit">&#xB0;</span>');
+  flip(document.getElementById('mTemp'),    h.temp+'<span class="munit">&#xB0;</span>');
+  flip(document.getElementById('mWind'),    h.wind+'<span class="munit">W</span>');
+  flip(document.getElementById('mGust'),    h.gust+'<span class="munit">W</span>');
   flip(document.getElementById('mRainPct'), String(h.rainPct));
   flip(document.getElementById('mRainMm'),  String(h.rainMm));
-  document.querySelectorAll('.htick').forEach(function(t, i) {
-    t.classList.toggle('active', i === idx);
-  });
+  document.querySelectorAll('.htick').forEach(function(t,i){t.classList.toggle('active',i===idx)});
 }
 
-// ── ZOOM ANIMATION ────────────────────────────────────────────────────
-function applyZoom(p) {
-  if (p <= 0) {
-    zOverlay.style.opacity = '0';
-    zThumb.style.opacity = '1';
-    return;
-  }
-  if (p >= 1) {
-    // Snap overlay to exact runner panel position - no flicker
-    var dr2 = destRect();
-    zOverlay.style.left   = dr2.left   + 'px';
-    zOverlay.style.top    = dr2.top    + 'px';
-    zOverlay.style.width  = dr2.width  + 'px';
-    zOverlay.style.height = dr2.height + 'px';
-    zOverlay.style.borderRadius = '0';
-    zOverlay.style.opacity = '1';
-    zThumb.style.opacity = '0';
-    return;
-  }
-  if (!startRect) captureThumb();
-  var t = ease(p);
-  var dr = destRect();
-  zThumb.style.opacity = String(1 - p * 3);
-  zOverlay.style.opacity = '1';
-  zOverlay.style.left   = lerp(startRect.left,   dr.left,   t) + 'px';
-  zOverlay.style.top    = lerp(startRect.top,    dr.top,    t) + 'px';
-  zOverlay.style.width  = lerp(startRect.width,  dr.width,  t) + 'px';
-  zOverlay.style.height = lerp(startRect.height, dr.height, t) + 'px';
-  zOverlay.style.borderRadius = lerp(6, 0, t) + 'px';
-}
-
-// ── MAIN SCROLL ───────────────────────────────────────────────────────
-function onScroll() {
-  var sy = window.scrollY;
-  calcZones();
+function onScroll(){
+  var sy=window.scrollY;
+  var vh=window.innerHeight;
+  var introEnd = vh*VPH;
+  var zoomEnd  = vh*(VPH+ZOOM_H);
+  var hoursEnd = vh*(VPH+ZOOM_H+N*HR_H);
 
   // INTRO
-  if (sy < INTRO_END) {
+  if(sy<introEnd){
     show(sceneIntro);
+    sceneIntro.style.opacity=String(clamp(1-(sy/(introEnd*0.8)-0.75)*4,0,1));
     hide(sceneHours);
     hide(sceneOutro);
-    applyZoom(0);
+    zOverlay.style.opacity='0';
+    zThumb.style.opacity='1';
     captureThumb();
-    sceneIntro.style.opacity = '1';
     return;
   }
 
-  // ZOOM TRANSITION
-  if (sy < ZOOM_END) {
-    var p = (sy - INTRO_END) / (ZOOM_END - INTRO_END);
-    sceneIntro.style.opacity = String(clamp(1 - p * 2, 0, 1));
-    show(sceneIntro);
-    hide(sceneHours);
+  // ZOOM
+  if(sy<zoomEnd){
+    var p=(sy-introEnd)/(zoomEnd-introEnd);
+    var t=ease(p);
+    if(!startRect)captureThumb();
+    var dr=destRect();
+
+    // Show hours scene underneath so background color is ready
+    show(sceneHours);
+    sceneHours.style.opacity=String(clamp(p*3,0,1));
     hide(sceneOutro);
-    applyZoom(p);
+
+    // Fade intro text
+    sceneIntro.style.opacity=String(clamp(1-p*3,0,1));
+    if(p>0.3){hide(sceneIntro);}else{show(sceneIntro);}
+
+    // Animate overlay
+    zThumb.style.opacity=String(clamp(1-p*4,0,1));
+    zOverlay.style.opacity='1';
+    zOverlay.style.left  =lerp(startRect.left,  dr.left,  t)+'px';
+    zOverlay.style.top   =lerp(startRect.top,   dr.top,   t)+'px';
+    zOverlay.style.width =lerp(startRect.width, dr.width, t)+'px';
+    zOverlay.style.height=lerp(startRect.height,dr.height,t)+'px';
+    zOverlay.style.borderRadius=lerp(6,0,t)+'px';
     return;
   }
 
-  // HOURS
+  // HOURS — overlay gone, runner panel shows
   hide(sceneIntro);
-  applyZoom(1);
-  if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
+  zOverlay.style.opacity='0';
+  zThumb.style.opacity='0';
 
-  if (sy < HOURS_END) {
+  if(sy<hoursEnd){
     show(sceneHours);
     hide(sceneOutro);
-    var idx = clamp(Math.floor((sy - ZOOM_END) / (window.innerHeight * HR_H)), 0, N - 1);
+    var idx=clamp(Math.floor((sy-zoomEnd)/(vh*HR_H)),0,N-1);
     updateHour(idx);
+    if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
     return;
   }
 
   // OUTRO
   hide(sceneHours);
   show(sceneOutro);
-  zOverlay.style.opacity='0';
   if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────
-calcZones();
-window.scrollTo(0, 0);
-setTimeout(captureThumb, 100);
-window.addEventListener('resize', calcZones);
-window.addEventListener('scroll', onScroll, {passive: true});
-onScroll();
+window.scrollTo(0,0);
+setTimeout(function(){captureThumb();onScroll();},150);
+window.addEventListener('resize',function(){startRect=null;captureThumb();});
+window.addEventListener('scroll',onScroll,{passive:true});
 updateHour(0);
 
-// ── STRAVA ────────────────────────────────────────────────────────────
-var CLIENT_ID = 'YOUR_CLIENT_ID';
+// Strava
+var CLIENT_ID='YOUR_CLIENT_ID';
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-
-document.getElementById('stravaBtn').addEventListener('click', function(){openModal('consent-modal')});
-document.getElementById('consentClose').addEventListener('click', function(){closeModal('consent-modal')});
-document.getElementById('consentCancel').addEventListener('click', function(){closeModal('consent-modal')});
-document.getElementById('consent-modal').addEventListener('click', function(e){if(e.target===this)closeModal('consent-modal')});
-document.getElementById('consentConfirm').addEventListener('click', function(){
+document.getElementById('stravaBtn').addEventListener('click',function(){openModal('consent-modal')});
+document.getElementById('consentClose').addEventListener('click',function(){closeModal('consent-modal')});
+document.getElementById('consentCancel').addEventListener('click',function(){closeModal('consent-modal')});
+document.getElementById('consent-modal').addEventListener('click',function(e){if(e.target===this)closeModal('consent-modal')});
+document.getElementById('consentConfirm').addEventListener('click',function(){
   closeModal('consent-modal');
-  var p = new URLSearchParams({
-    client_id: CLIENT_ID,
-    redirect_uri: window.location.origin + window.location.pathname,
-    response_type: 'code', approval_prompt: 'auto', scope: 'read,activity:write'
-  });
-  window.location.href = 'https://www.strava.com/oauth/authorize?' + p;
+  var p=new URLSearchParams({client_id:CLIENT_ID,redirect_uri:window.location.origin+window.location.pathname,response_type:'code',approval_prompt:'auto',scope:'read,activity:write'});
+  window.location.href='https://www.strava.com/oauth/authorize?'+p;
 });
-document.getElementById('modalClose').addEventListener('click', function(){closeModal('strava-modal')});
-document.getElementById('strava-modal').addEventListener('click', function(e){if(e.target===this)closeModal('strava-modal')});
-
+document.getElementById('modalClose').addEventListener('click',function(){closeModal('strava-modal')});
+document.getElementById('strava-modal').addEventListener('click',function(e){if(e.target===this)closeModal('strava-modal')});
 (function(){
-  var params = new URLSearchParams(window.location.search);
-  var code = params.get('code');
-  if (!code) return;
-  window.history.replaceState({}, '', window.location.pathname);
-  fetch('/.netlify/functions/strava-auth', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({code: code})
-  }).then(function(r){return r.json()}).then(function(a){
-    document.getElementById('modalName').textContent = a.firstname + ' ' + a.lastname;
-    var av = document.getElementById('modalAvatar');
-    if (a.profile_medium){av.src = a.profile_medium; av.style.display = 'block'}
-    openModal('strava-modal');
-  }).catch(function(e){console.error(e)});
+  var params=new URLSearchParams(window.location.search);
+  var code=params.get('code');
+  if(!code)return;
+  window.history.replaceState({},'',window.location.pathname);
+  fetch('/.netlify/functions/strava-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})})
+    .then(function(r){return r.json()}).then(function(a){
+      document.getElementById('modalName').textContent=a.firstname+' '+a.lastname;
+      var av=document.getElementById('modalAvatar');
+      if(a.profile_medium){av.src=a.profile_medium;av.style.display='block'}
+      openModal('strava-modal');
+    }).catch(function(e){console.error(e)});
 })();
 </script>
 </body>
