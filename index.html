@@ -112,9 +112,8 @@ body{overflow-x:hidden}
   background:#000;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:12px;
   cursor:pointer;z-index:10000;
-  transform:translateX(110%);transition:transform 0.5s cubic-bezier(0.4,0,0.2,1)
+  opacity:0;pointer-events:none;transition:opacity 0.5s ease
 }
-#sticky-cta.visible{transform:translateX(0)}
 .cta-label{font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5)}
 .strava-btn{display:flex;align-items:center;gap:10px;background:#FC4C02;border:none;border-radius:4px;padding:12px 22px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;color:#fff}
 .strava-btn svg{width:20px;height:20px}
@@ -398,7 +397,6 @@ function onScroll() {
     show(sceneIntro);
     hide(sceneHours);
     hide(sceneOutro);
-    hide(stickyCta);
     applyZoom(0);
     captureThumb();
     sceneIntro.style.opacity = '1';
@@ -419,7 +417,7 @@ function onScroll() {
   // HOURS
   hide(sceneIntro);
   applyZoom(1);
-  stickyCta.style.transform='translateX(0)';
+  stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';
 
   if (sy < HOURS_END) {
     show(sceneHours);
