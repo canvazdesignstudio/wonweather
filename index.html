@@ -370,12 +370,10 @@ function onScroll(){
     if(!startRect) captureThumb();
     var dr=destRect();
 
-    // Fade intro out
-    sceneIntro.style.opacity='1';
-    show(sceneIntro);
-
-    // Keep hours hidden during zoom - pure zoom on white bg
-    hide(sceneHours);
+    // Hide intro, show orange hours bg immediately
+    hide(sceneIntro);
+    show(sceneHours);
+    sceneHours.style.opacity='1';
 
     // Zoom overlay — pure zoom, no fade
     zThumb.style.opacity=String(clamp(1-p*3,0,1));
