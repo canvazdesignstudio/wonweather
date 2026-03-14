@@ -46,11 +46,10 @@ body{overflow-x:hidden}
 
 /* ── ZOOM OVERLAY ── */
 #zoom-overlay{
-  position:fixed;overflow:hidden;border-radius:6px;
-  pointer-events:none;opacity:0;z-index:20;
-  transition:border-radius 0.1s;
+  position:fixed;overflow:hidden;
+  pointer-events:none;z-index:20;
 }
-#zoom-overlay video{width:100%;height:100%;object-fit:cover;display:block}
+#zoom-overlay video{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block}
 
 /* ── HOURS ── */
 #scene-hours{z-index:5;transition:opacity 0.3s ease}
@@ -83,9 +82,9 @@ body{overflow-x:hidden}
 .flip{animation:flipIn 0.18s ease forwards}
 #runner-panel{
   position:absolute;left:534px;top:50%;transform:translateY(-50%);width:min(611px,calc(100vw - 540px));height:min(786px,90vh);
-  overflow:hidden;z-index:6;
+  overflow:hidden;z-index:6;opacity:0;
 }
-#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+#runner-panel video{width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block}
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
@@ -371,8 +370,15 @@ function applyZoom(p) {
     zThumb.style.opacity = '1';
     return;
   }
-  if (p >= 0.85) {
-    zOverlay.style.opacity = '0';
+  if (p >= 1) {
+    // Snap overlay to exact runner panel position - no flicker
+    var dr2 = destRect();
+    zOverlay.style.left   = dr2.left   + 'px';
+    zOverlay.style.top    = dr2.top    + 'px';
+    zOverlay.style.width  = dr2.width  + 'px';
+    zOverlay.style.height = dr2.height + 'px';
+    zOverlay.style.borderRadius = '0';
+    zOverlay.style.opacity = '1';
     zThumb.style.opacity = '0';
     return;
   }
