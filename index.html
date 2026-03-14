@@ -42,11 +42,12 @@ body{overflow-x:hidden}
 /* ── ZOOM OVERLAY — animates from thumb to runner position ── */
 #zoom-overlay{
   position:fixed;overflow:hidden;border-radius:6px;
-  pointer-events:none;z-index:15;opacity:0;
+  pointer-events:none;z-index:8;opacity:0;
+  will-change:left,top,width,height;
 }
 #zoom-overlay video{
   width:100%;height:100%;
-  object-fit:cover;object-position:center 40%;
+  object-fit:cover;
   display:block;
 }
 
@@ -60,18 +61,7 @@ body{overflow-x:hidden}
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
 
 /* Runner video — fixed position behind metrics, z-index:4 */
-#runner-panel{
-  position:absolute;
-  left:534px;
-  top:50%;transform:translateY(-50%);
-  width:500px;height:88vh;
-  overflow:hidden;z-index:4;
-}
-#runner-panel video{
-  width:100%;height:100%;
-  object-fit:cover;object-position:center 40%;
-  display:block;
-}
+#runner-panel{display:none}
 
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
@@ -325,8 +315,11 @@ function captureThumb(){
 
 // Destination = runner panel's actual position on screen
 function destRect(){
-  var r=runnerPanel.getBoundingClientRect();
-  return{left:r.left,top:r.top,width:r.width,height:r.height};
+  var vh=window.innerHeight;
+  var h=Math.round(vh*0.88);
+  var w=Math.round(h*611/786);
+  var top=Math.round((vh-h)/2);
+  return{left:534,top:top,width:w,height:h};
 }
 
 function flip(el,html){
@@ -395,9 +388,15 @@ function onScroll(){
     return;
   }
 
-  // HOURS — overlay gone, runner panel shows
+  // HOURS — overlay stays at destRect position
   hide(sceneIntro);
-  zOverlay.style.opacity='0';
+  var dr=destRect();
+  zOverlay.style.left=dr.left+'px';
+  zOverlay.style.top=dr.top+'px';
+  zOverlay.style.width=dr.width+'px';
+  zOverlay.style.height=dr.height+'px';
+  zOverlay.style.borderRadius='0';
+  zOverlay.style.opacity='1';
   zThumb.style.opacity='0';
 
   if(sy<hoursEnd){
@@ -411,6 +410,7 @@ function onScroll(){
 
   // OUTRO
   hide(sceneHours);
+  zOverlay.style.opacity='0';
   show(sceneOutro);
   if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
 }
