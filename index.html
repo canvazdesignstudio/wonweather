@@ -371,12 +371,11 @@ function onScroll(){
     var dr=destRect();
 
     // Fade intro out
-    sceneIntro.style.opacity=String(clamp(1-p*2,0,1));
-    if(p>0.5) hide(sceneIntro); else show(sceneIntro);
+    sceneIntro.style.opacity='1';
+    show(sceneIntro);
 
-    // Fade hours bg in (just background, no metrics yet)
-    show(sceneHours);
-    sceneHours.style.opacity=String(clamp(p*2,0,1));
+    // Keep hours hidden during zoom - pure zoom on white bg
+    hide(sceneHours);
 
     // Zoom overlay — pure zoom, no fade
     zThumb.style.opacity=String(clamp(1-p*3,0,1));
