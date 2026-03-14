@@ -41,7 +41,7 @@ body{overflow-x:hidden}
 
 /* ── ZOOM OVERLAY — animates from thumb to runner position ── */
 #zoom-overlay{
-  position:fixed;overflow:hidden;border-radius:6px;
+  position:absolute;overflow:hidden;border-radius:6px;
   pointer-events:none;z-index:4;opacity:0;
   will-change:left,top,width,height;
 }
@@ -168,14 +168,13 @@ body{overflow-x:hidden}
   <div id="scroll-cue">scroll</div>
 </div>
 
-<!-- ZOOM OVERLAY: animates the runner thumbnail to its final position -->
-<div id="zoom-overlay">
-  <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
-</div>
-
 <!-- SCENE: HOURS -->
 <div id="scene-hours" class="scene">
   <div class="h-bg" id="hBg"></div>
+  <!-- ZOOM OVERLAY inside hours scene -->
+  <div id="zoom-overlay">
+    <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
+  </div>
   <div class="logo h-logo">WON</div>
   <div id="runner-panel">
     <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
