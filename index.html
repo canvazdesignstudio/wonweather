@@ -50,43 +50,9 @@ body{overflow-x:hidden}
 .h-bg{position:absolute;inset:0;transition:background 0.6s ease;z-index:0}
 
 /* Background patterns per score */
-.pat-poor{
-  background:#fd9363;
-}
-.pat-poor::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background-image:repeating-linear-gradient(
-    -45deg,transparent 0,transparent 18px,
-    rgba(0,0,0,0.04) 18px,rgba(0,0,0,0.04) 19px
-  );
-}
-.pat-fair{
-  background:#f5c842;
-}
-.pat-fair::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background-image:repeating-linear-gradient(
-    180deg,transparent 0,transparent 22px,
-    rgba(0,0,0,0.04) 22px,rgba(0,0,0,0.04) 24px
-  );
-  background-size:100% 48px;
-  /* Wavy lines via SVG */
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='40'%3E%3Cpath d='M0 20 Q25 5 50 20 Q75 35 100 20 Q125 5 150 20 Q175 35 200 20' fill='none' stroke='rgba(0,0,0,0.06)' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat:repeat;
-  background-size:200px 40px;
-}
-.pat-good{
-  background:#83e9d0;
-}
-.pat-good::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  /* Starburst via radial repeating gradient */
-  background-image:repeating-conic-gradient(
-    from 0deg at 80% 50%,
-    rgba(0,0,0,0.05) 0deg, rgba(0,0,0,0.05) 2deg,
-    transparent 2deg, transparent 6deg
-  );
-}
+.pat-poor{background:#fd9363}
+.pat-fair{background:#f5c842}
+.pat-good{background:#83e9d0}
 
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
 
