@@ -41,7 +41,7 @@ body{overflow-x:hidden}
 /* ── ZOOM OVERLAY ── */
 #zoom-overlay{
   position:fixed;overflow:hidden;
-  pointer-events:none;z-index:9;opacity:0;
+  pointer-events:none;z-index:11;opacity:0;
 }
 #zoom-overlay video{width:100%;height:100%;object-fit:cover;display:block}
 
@@ -420,23 +420,24 @@ function onScroll(){
     hide(sceneOutro);
     zOverlay.style.opacity='0';
     zThumb.style.opacity='1';
-    captureThumb();
+    startRect=null; // reset so next zoom captures fresh position
     return;
   }
 
   if(sy<zoomEnd){
     var p=(sy-introEnd)/(zoomEnd-introEnd);
     var t=ease(p);
-    if(!startRect)captureThumb();
+    // Capture thumb position on very first zoom frame
+    if(!startRect) captureThumb();
     var dr=destRect();
-    // Intro STAYS fully visible the entire zoom - video grows on top of it
+    // Intro stays fully visible - zoom overlay on top (z-index:11)
     show(sceneIntro);
     sceneIntro.style.opacity='1';
-    // Hours scene hidden until zoom is 100% done
+    // Hide hours until zoom done
     hide(sceneHours);
-    // Hide the original thumb as soon as zoom starts
+    // Replace thumb with overlay seamlessly
     zThumb.style.opacity='0';
-    // Zoom overlay grows continuously from thumb to final position
+    // Overlay covers exactly where thumb was and grows
     zOverlay.style.opacity='1';
     zOverlay.style.left  =lerp(startRect.left,  dr.left,  t)+'px';
     zOverlay.style.top   =lerp(startRect.top,   dr.top,   t)+'px';
