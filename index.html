@@ -48,27 +48,25 @@ body{overflow-x:hidden}
 /* ── HOURS ── */
 #scene-hours{z-index:5}
 .h-bg{position:absolute;inset:0;transition:background 0.6s ease;z-index:0}
-
-/* Background patterns per score */
 .pat-poor{background:#fd9363}
 .pat-fair{background:#f5c842}
 .pat-good{background:#83e9d0}
-
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
 
-/* Pattern overlay - square on top of video */
+/* Pattern overlay square — desktop */
 #pat-overlay{
   position:absolute;left:740px;top:35px;width:587px;height:587px;
-  z-index:3;pointer-events:none;transition:opacity 0.5s;
+  z-index:3;pointer-events:none;
 }
-/* Runner panel - hidden until zoom completes */
+
+/* Runner panel — desktop */
 #runner-panel{
   position:absolute;left:445px;top:50%;transform:translateY(-50%);
   width:500px;height:88vh;overflow:hidden;z-index:2;opacity:0;
 }
 #runner-panel video{width:100%;height:100%;object-fit:cover;display:block}
 
-/* Hours sidebar */
+/* Hours sidebar — desktop only */
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
@@ -77,7 +75,7 @@ body{overflow-x:hidden}
 .htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s,color 0.25s}
 .htick.active{font-size:72px;color:#000;line-height:0.9}
 
-/* Metrics */
+/* Metrics grid — desktop */
 .metrics-grid{
   position:absolute;left:270px;top:90px;
   display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
@@ -99,6 +97,9 @@ body{overflow-x:hidden}
   display:flex;align-items:center;z-index:10;padding-left:270px
 }
 .h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
+
+/* Mobile active time — hidden on desktop */
+.h-active-time{display:none}
 
 /* ── OUTRO ── */
 #scene-outro{background:#83e9d0;z-index:5}
@@ -127,35 +128,68 @@ body{overflow-x:hidden}
 
 /* ── MOBILE ── */
 @media(max-width:768px){
-  /* Hours scene mobile layout */
-  .h-logo{top:16px;right:20px;left:auto}
-  #runner-panel{
-    position:absolute;right:0;top:0;
-    left:50%;width:50%;height:100%;
-    transform:none;
+  /* Intro: logo top-right, text left-aligned */
+  #scene-intro .logo{left:auto;right:20px;top:20px}
+  #i-headline{
+    align-items:flex-start;padding:0 20px;
+    font-size:clamp(32px,11vw,64px);gap:4px;
   }
-  .hours-col{display:none}
+  .i-row{justify-content:flex-start;gap:10px}
+
+  /* Hours: completely different layout */
+  .h-logo{left:auto;right:20px;top:16px}
   .h-active-time{
-    position:absolute;top:16px;left:20px;
-    font-family:'Manrope',sans-serif;font-weight:700;font-size:28px;color:#000;z-index:10
+    display:block;
+    position:absolute;top:12px;left:16px;
+    font-family:'Manrope',sans-serif;font-weight:700;font-size:32px;color:#000;
+    z-index:20;line-height:1;
   }
-  .metrics-grid{
-    position:absolute;left:0;top:auto;bottom:186px;
-    width:50%;
-    grid-template-columns:1fr 1fr;
-    grid-template-rows:auto auto auto;
-    gap:0;
-  }
-  .mcell{padding:12px 8px 12px 16px}
-  .mval{font-size:40px}
-  .munit{font-size:18px}
-  .mlabel{font-size:11px}
+
+  /* Hide desktop-only elements */
+  .hours-col{display:none}
   .w-icon{display:none}
   .h-bottom{display:none}
+
+  /* Runner panel: right half, full height minus CTA */
+  #runner-panel{
+    left:50%;top:0;
+    transform:none;
+    width:50%;height:calc(100% - 80px);
+    opacity:1 !important; /* always visible on mobile */
+  }
+
+  /* Pattern overlay: full left half + extends over video */
+  #pat-overlay{
+    left:0;top:0;
+    width:100%;height:calc(100% - 80px);
+  }
+
+  /* Metrics: left half, 2 cols, 3 rows, evenly spaced */
+  .metrics-grid{
+    left:0;top:60px;
+    width:50%;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:repeat(3,1fr);
+    height:calc(100% - 140px);
+  }
+  .mcell{padding:8px 4px 8px 12px}
+  .mval{font-size:36px}
+  .munit{font-size:16px}
+  .mlabel{font-size:10px}
+  .mlrow{margin-bottom:6px;gap:6px}
+  .mdot{width:6px;height:6px}
+
+  /* CTA: full width at bottom */
   #sticky-cta{
-    width:100%;height:72px;flex-direction:row;padding:0 24px;gap:16px
+    width:100%;height:80px;
+    flex-direction:row;gap:16px;padding:0 20px;
+    right:0;left:0;
   }
   .cta-label{font-size:11px;letter-spacing:1px}
+  .strava-btn{padding:8px 16px;font-size:13px}
+
+  /* Outro: simpler mobile layout */
+  .o-body{padding:40px 20px}
 }
 
 /* ── MODALS ── */
@@ -328,6 +362,7 @@ function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
 function lerp(a,b,t){return a+(b-a)*t}
 function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
 function scoreClass(s){return s>=80?'pat-good':s>=60?'pat-fair':'pat-poor'}
+function isMobile(){return window.innerWidth<=768}
 function show(el){el.style.opacity='1';el.style.pointerEvents='all'}
 function hide(el){el.style.opacity='0';el.style.pointerEvents='none'}
 
@@ -348,6 +383,7 @@ var zOverlay  =document.getElementById('zoom-overlay');
 var zThumb    =document.getElementById('zthumb');
 var hBg       =document.getElementById('hBg');
 var hActiveTime=document.getElementById('hActiveTime');
+var runnerPanel=document.getElementById('runner-panel');
 var lastIdx=-1,ctaShown=false,startRect=null;
 
 function captureThumb(){
@@ -357,9 +393,9 @@ function captureThumb(){
 
 function destRect(){
   var vh=window.innerHeight;
-  var isMobile=window.innerWidth<=768;
-  if(isMobile){
-    return{left:Math.round(window.innerWidth/2),top:0,width:Math.round(window.innerWidth/2),height:vh-186};
+  var vw=window.innerWidth;
+  if(isMobile()){
+    return{left:Math.round(vw/2),top:0,width:Math.round(vw/2),height:vh-80};
   }
   var h=Math.round(vh*0.88);
   var w=500;
@@ -372,11 +408,44 @@ function flip(el,html){
   el.innerHTML=html;el.classList.add('flip');
 }
 
+function setPattern(score){
+  var pat=document.getElementById('pat-overlay');
+  var mobile=isMobile();
+  var sz=mobile?Math.min(window.innerWidth,window.innerHeight-80):587;
+  var cx=mobile?sz/4:sz/2; // mobile: center in left half
+  var cy=sz/2;
+
+  if(score>=80){
+    var lines='';
+    for(var a=0;a<60;a++){
+      var rad=a*6*Math.PI/180;
+      var x2=cx+Math.cos(rad)*sz*0.85;
+      var y2=cy+Math.sin(rad)*sz*0.85;
+      lines+='<line x1="'+cx+'" y1="'+cy+'" x2="'+x2+'" y2="'+y2+'" stroke="rgba(0,0,0,0.45)" stroke-width="1.2"/>';
+    }
+    pat.innerHTML='<svg viewBox="0 0 '+sz+' '+sz+'" xmlns="http://www.w3.org/2000/svg" width="'+sz+'" height="'+sz+'">'+lines+'<circle cx="'+cx+'" cy="'+cy+'" r="'+Math.round(sz*0.09)+'" fill="black"/></svg>';
+  } else if(score>=60){
+    var waves='';
+    var rows=Math.ceil(sz/30)+2;
+    for(var i=0;i<rows;i++){
+      var y=i*30-15;
+      waves+='<path d="M0 '+y+' Q'+(sz*0.125)+' '+(y-12)+' '+(sz*0.25)+' '+y+' Q'+(sz*0.375)+' '+(y+12)+' '+(sz*0.5)+' '+y+' Q'+(sz*0.625)+' '+(y-12)+' '+(sz*0.75)+' '+y+' Q'+(sz*0.875)+' '+(y+12)+' '+sz+' '+y+'" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/>';
+    }
+    pat.innerHTML='<svg viewBox="0 0 '+sz+' '+sz+'" xmlns="http://www.w3.org/2000/svg" width="'+sz+'" height="'+sz+'">'+waves+'</svg>';
+  } else {
+    var diags='';
+    var step=mobile?20:28;
+    for(var j=-sz;j<sz*2;j+=step){
+      diags+='<line x1="'+j+'" y1="0" x2="'+(j+sz)+'" y2="'+sz+'" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>';
+    }
+    pat.innerHTML='<svg viewBox="0 0 '+sz+' '+sz+'" xmlns="http://www.w3.org/2000/svg" width="'+sz+'" height="'+sz+'">'+diags+'</svg>';
+  }
+}
+
 function updateHour(idx){
   if(idx===lastIdx)return;
   lastIdx=idx;
   var h=HOURS[idx];
-  // Update background pattern class
   hBg.className='h-bg '+scoreClass(h.score);
   document.getElementById('wIcon').innerHTML=h.icon;
   hActiveTime.textContent=h.label;
@@ -387,23 +456,7 @@ function updateHour(idx){
   flip(document.getElementById('mRainPct'), String(h.rainPct));
   flip(document.getElementById('mRainMm'),  String(h.rainMm));
   document.querySelectorAll('.htick').forEach(function(t,i){t.classList.toggle('active',i===idx)});
-  var pat=document.getElementById('pat-overlay');
-  if(h.score>=80){
-    // GOOD: starburst
-    pat.innerHTML='<svg viewBox="0 0 587 587" xmlns="http://www.w3.org/2000/svg" width="587" height="587"><g transform="translate(293,293)">'+
-      (function(){var s='';for(var a=0;a<60;a++){var r=a*6;var x=Math.cos(r*Math.PI/180)*350;var y=Math.sin(r*Math.PI/180)*350;s+='<line x1="0" y1="0" x2="'+x+'" y2="'+y+'" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>';}return s;}())+
-      '<circle cx="0" cy="0" r="55" fill="black"/></g></svg>';
-  } else if(h.score>=60){
-    // FAIR: wavy lines
-    pat.innerHTML='<svg viewBox="0 0 587 587" xmlns="http://www.w3.org/2000/svg" width="587" height="587">'+
-      (function(){var s='';for(var i=0;i<20;i++){var y=15+i*30;s+='<path d="M0 '+y+' Q73 '+(y-15)+' 147 '+y+' Q220 '+(y+15)+' 293 '+y+' Q367 '+(y-15)+' 440 '+y+' Q514 '+(y+15)+' 587 '+y+'" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>';}return s;}())+
-      '</svg>';
-  } else {
-    // POOR: diagonal lines
-    pat.innerHTML='<svg viewBox="0 0 587 587" xmlns="http://www.w3.org/2000/svg" width="587" height="587">'+
-      (function(){var s='';for(var i=-20;i<40;i++){var x=i*30;s+='<line x1="'+x+'" y1="0" x2="'+(x+587)+'" y2="587" stroke="rgba(0,0,0,0.25)" stroke-width="1.5"/>';}return s;}())+
-      '</svg>';
-  }
+  setPattern(h.score);
 }
 
 function onScroll(){
@@ -412,6 +465,7 @@ function onScroll(){
   var introEnd=vh*VPH;
   var zoomEnd =vh*(VPH+ZOOM_H);
   var hoursEnd=vh*(VPH+ZOOM_H+N*HR_H);
+  var mob=isMobile();
 
   if(sy<introEnd){
     show(sceneIntro);
@@ -420,24 +474,19 @@ function onScroll(){
     hide(sceneOutro);
     zOverlay.style.opacity='0';
     zThumb.style.opacity='1';
-    startRect=null; // reset so next zoom captures fresh position
+    startRect=null;
     return;
   }
 
   if(sy<zoomEnd){
     var p=(sy-introEnd)/(zoomEnd-introEnd);
     var t=ease(p);
-    // Capture thumb position on very first zoom frame
-    if(!startRect) captureThumb();
+    if(!startRect)captureThumb();
     var dr=destRect();
-    // Intro stays fully visible - zoom overlay on top (z-index:11)
     show(sceneIntro);
     sceneIntro.style.opacity='1';
-    // Hide hours until zoom done
     hide(sceneHours);
-    // Replace thumb with overlay seamlessly
     zThumb.style.opacity='0';
-    // Overlay covers exactly where thumb was and grows
     zOverlay.style.opacity='1';
     zOverlay.style.left  =lerp(startRect.left,  dr.left,  t)+'px';
     zOverlay.style.top   =lerp(startRect.top,   dr.top,   t)+'px';
@@ -450,7 +499,7 @@ function onScroll(){
   hide(sceneIntro);
   zOverlay.style.opacity='0';
   zThumb.style.opacity='0';
-  document.getElementById('runner-panel').style.opacity='1';
+  if(!mob) runnerPanel.style.opacity='1';
 
   if(sy<hoursEnd){
     show(sceneHours);
@@ -468,10 +517,9 @@ function onScroll(){
 }
 
 window.scrollTo(0,0);
-setTimeout(function(){captureThumb();onScroll();},150);
-window.addEventListener('resize',function(){startRect=null;captureThumb();});
+setTimeout(function(){captureThumb();onScroll();updateHour(0);},150);
+window.addEventListener('resize',function(){startRect=null;captureThumb();lastIdx=-1;updateHour(lastIdx<0?0:lastIdx);});
 window.addEventListener('scroll',onScroll,{passive:true});
-updateHour(0);
 
 var CLIENT_ID='YOUR_CLIENT_ID';
 function openModal(id){document.getElementById(id).classList.add('open')}
