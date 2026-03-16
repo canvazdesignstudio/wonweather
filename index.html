@@ -429,14 +429,14 @@ function onScroll(){
     var t=ease(p);
     if(!startRect)captureThumb();
     var dr=destRect();
-    // Keep intro visible, fade it out in last 30%
-    sceneIntro.style.opacity=String(clamp(1-((p-0.7)/0.3),0,1));
+    // Intro STAYS fully visible the entire zoom - video grows on top of it
     show(sceneIntro);
-    // Hours scene fades in behind zoom overlay in last 40%
-    show(sceneHours);
-    sceneHours.style.opacity=String(clamp((p-0.6)/0.4,0,1));
-    // Zoom overlay: pure position animation, always visible
-    zThumb.style.opacity=String(clamp(1-p*3,0,1));
+    sceneIntro.style.opacity='1';
+    // Hours scene hidden until zoom is 100% done
+    hide(sceneHours);
+    // Hide the original thumb as soon as zoom starts
+    zThumb.style.opacity='0';
+    // Zoom overlay grows continuously from thumb to final position
     zOverlay.style.opacity='1';
     zOverlay.style.left  =lerp(startRect.left,  dr.left,  t)+'px';
     zOverlay.style.top   =lerp(startRect.top,   dr.top,   t)+'px';
