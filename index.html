@@ -90,10 +90,15 @@ body{overflow-x:hidden}
 
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
 
-/* Runner panel */
+/* Pattern overlay - square on top of video */
+#pat-overlay{
+  position:absolute;left:740px;top:35px;width:587px;height:587px;
+  z-index:3;pointer-events:none;transition:opacity 0.5s;
+}
+/* Runner panel - hidden until zoom completes */
 #runner-panel{
   position:absolute;left:445px;top:50%;transform:translateY(-50%);
-  width:500px;height:88vh;overflow:hidden;z-index:2;
+  width:500px;height:88vh;overflow:hidden;z-index:2;opacity:0;
 }
 #runner-panel video{width:100%;height:100%;object-fit:cover;display:block}
 
@@ -245,6 +250,7 @@ body{overflow-x:hidden}
 <!-- SCENE: HOURS -->
 <div id="scene-hours" class="scene">
   <div class="h-bg pat-poor" id="hBg"></div>
+  <div id="pat-overlay"></div>
   <div class="logo h-logo">WON</div>
   <div class="h-active-time" id="hActiveTime">10:00</div>
   <div id="runner-panel">
@@ -415,6 +421,23 @@ function updateHour(idx){
   flip(document.getElementById('mRainPct'), String(h.rainPct));
   flip(document.getElementById('mRainMm'),  String(h.rainMm));
   document.querySelectorAll('.htick').forEach(function(t,i){t.classList.toggle('active',i===idx)});
+  var pat=document.getElementById('pat-overlay');
+  if(h.score>=80){
+    // GOOD: starburst
+    pat.innerHTML='<svg viewBox="0 0 587 587" xmlns="http://www.w3.org/2000/svg" width="587" height="587"><g transform="translate(293,293)">'+
+      (function(){var s='';for(var a=0;a<60;a++){var r=a*6;var x=Math.cos(r*Math.PI/180)*350;var y=Math.sin(r*Math.PI/180)*350;s+='<line x1="0" y1="0" x2="'+x+'" y2="'+y+'" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>';}return s;}())+
+      '<circle cx="0" cy="0" r="55" fill="black"/></g></svg>';
+  } else if(h.score>=60){
+    // FAIR: wavy lines
+    pat.innerHTML='<svg viewBox="0 0 587 587" xmlns="http://www.w3.org/2000/svg" width="587" height="587">'+
+      (function(){var s='';for(var i=0;i<20;i++){var y=15+i*30;s+='<path d="M0 '+y+' Q73 '+(y-15)+' 147 '+y+' Q220 '+(y+15)+' 293 '+y+' Q367 '+(y-15)+' 440 '+y+' Q514 '+(y+15)+' 587 '+y+'" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>';}return s;}())+
+      '</svg>';
+  } else {
+    // POOR: diagonal lines
+    pat.innerHTML='<svg viewBox="0 0 587 587" xmlns="http://www.w3.org/2000/svg" width="587" height="587">'+
+      (function(){var s='';for(var i=-20;i<40;i++){var x=i*30;s+='<line x1="'+x+'" y1="0" x2="'+(x+587)+'" y2="587" stroke="rgba(0,0,0,0.25)" stroke-width="1.5"/>';}return s;}())+
+      '</svg>';
+  }
 }
 
 function onScroll(){
@@ -456,6 +479,7 @@ function onScroll(){
   hide(sceneIntro);
   zOverlay.style.opacity='0';
   zThumb.style.opacity='0';
+  document.getElementById('runner-panel').style.opacity='1';
 
   if(sy<hoursEnd){
     show(sceneHours);
