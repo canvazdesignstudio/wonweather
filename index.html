@@ -14,8 +14,8 @@ body{overflow-x:hidden}
 .scene{position:fixed;inset:0;width:100%;height:100vh;opacity:0;pointer-events:none;overflow:hidden}
 .scene.active{opacity:1;pointer-events:all}
 
-/* INTRO */
-#scene-intro{background:#fff;z-index:10;transition:opacity 0.4s ease}
+/* ── INTRO ── */
+#scene-intro{background:#fff;z-index:10}
 .logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:20px;letter-spacing:-1px;color:#000;position:absolute;top:24px;left:32px;z-index:2}
 #i-headline{
   position:absolute;inset:0;
@@ -38,41 +38,75 @@ body{overflow-x:hidden}
 }
 #scroll-cue::after{content:'';display:block;width:1px;height:36px;background:rgba(0,0,0,0.2)}
 
-/* ZOOM OVERLAY — position:fixed, above everything during animation, then hidden */
+/* ── ZOOM OVERLAY ── */
 #zoom-overlay{
   position:fixed;overflow:hidden;
-  pointer-events:none;
-  opacity:0;
-  z-index:9; /* above scene-hours(5) and below scene-intro(10) */
+  pointer-events:none;z-index:9;opacity:0;
 }
 #zoom-overlay video{width:100%;height:100%;object-fit:cover;display:block}
 
-/* HOURS */
+/* ── HOURS ── */
 #scene-hours{z-index:5}
-.h-bg{position:absolute;inset:0;background:#fd9363;transition:background 0.6s ease;z-index:0}
-#scene-hours::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background-image:repeating-linear-gradient(-45deg,transparent 0,transparent 18px,rgba(0,0,0,0.025) 18px,rgba(0,0,0,0.025) 19px)
+.h-bg{position:absolute;inset:0;transition:background 0.6s ease;z-index:0}
+
+/* Background patterns per score */
+.pat-poor{
+  background:#fd9363;
 }
+.pat-poor::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:repeating-linear-gradient(
+    -45deg,transparent 0,transparent 18px,
+    rgba(0,0,0,0.04) 18px,rgba(0,0,0,0.04) 19px
+  );
+}
+.pat-fair{
+  background:#f5c842;
+}
+.pat-fair::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:repeating-linear-gradient(
+    180deg,transparent 0,transparent 22px,
+    rgba(0,0,0,0.04) 22px,rgba(0,0,0,0.04) 24px
+  );
+  background-size:100% 48px;
+  /* Wavy lines via SVG */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='40'%3E%3Cpath d='M0 20 Q25 5 50 20 Q75 35 100 20 Q125 5 150 20 Q175 35 200 20' fill='none' stroke='rgba(0,0,0,0.06)' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+  background-size:200px 40px;
+}
+.pat-good{
+  background:#83e9d0;
+}
+.pat-good::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  /* Starburst via radial repeating gradient */
+  background-image:repeating-conic-gradient(
+    from 0deg at 80% 50%,
+    rgba(0,0,0,0.05) 0deg, rgba(0,0,0,0.05) 2deg,
+    transparent 2deg, transparent 6deg
+  );
+}
+
 .h-logo{position:absolute;top:18px;left:32px;z-index:20}
 
-/* RUNNER PANEL — inside scene-hours, z-index:2, behind metrics */
+/* Runner panel */
 #runner-panel{
-  position:absolute;
-  left:445px;
-  top:50%;transform:translateY(-50%);
-  width:500px;height:88vh;
-  overflow:hidden;z-index:2;
+  position:absolute;left:445px;top:50%;transform:translateY(-50%);
+  width:500px;height:88vh;overflow:hidden;z-index:2;
 }
 #runner-panel video{width:100%;height:100%;object-fit:cover;display:block}
 
+/* Hours sidebar */
 .hours-col{
   position:absolute;left:52px;top:131px;bottom:190px;
   display:flex;flex-direction:column;justify-content:space-between;
-  font-family:'Manrope',sans-serif;font-weight:700;z-index:10
+  font-family:'Manrope',sans-serif;font-weight:700;z-index:10;
 }
 .htick{font-size:14px;color:rgba(0,0,0,0.12);line-height:1;white-space:nowrap;transition:font-size 0.25s,color 0.25s}
 .htick.active{font-size:72px;color:#000;line-height:0.9}
+
+/* Metrics */
 .metrics-grid{
   position:absolute;left:270px;top:90px;
   display:grid;grid-template-columns:175px 175px;grid-template-rows:205px 205px 205px;
@@ -87,6 +121,7 @@ body{overflow-x:hidden}
 .munit{font-size:26px}
 @keyframes flipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .flip{animation:flipIn 0.18s ease forwards}
+
 .w-icon{position:absolute;left:270px;bottom:220px;font-size:40px;z-index:10}
 .h-bottom{
   position:absolute;bottom:0;left:0;right:590px;height:186px;
@@ -94,7 +129,7 @@ body{overflow-x:hidden}
 }
 .h-tagline{font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:#000}
 
-/* OUTRO */
+/* ── OUTRO ── */
 #scene-outro{background:#83e9d0;z-index:5}
 #scene-outro::before{
   content:'';position:absolute;inset:0;pointer-events:none;
@@ -107,7 +142,7 @@ body{overflow-x:hidden}
 .o-hl{font-family:'Gabarito',sans-serif;font-weight:700;font-size:clamp(52px,8vw,120px);line-height:0.93;color:#000}
 .o-sub{margin-top:44px;font-family:'Manrope',sans-serif;font-size:15px;line-height:1.65;color:rgba(0,0,0,0.65);max-width:400px}
 
-/* CTA */
+/* ── CTA ── */
 #sticky-cta{
   position:fixed;bottom:0;right:0;width:590px;height:186px;
   background:#000;display:flex;flex-direction:column;
@@ -119,7 +154,40 @@ body{overflow-x:hidden}
 .strava-btn{display:flex;align-items:center;gap:10px;background:#FC4C02;border:none;border-radius:4px;padding:12px 22px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;color:#fff}
 .strava-btn svg{width:20px;height:20px}
 
-/* MODALS */
+/* ── MOBILE ── */
+@media(max-width:768px){
+  /* Hours scene mobile layout */
+  .h-logo{top:16px;right:20px;left:auto}
+  #runner-panel{
+    position:absolute;right:0;top:0;
+    left:50%;width:50%;height:100%;
+    transform:none;
+  }
+  .hours-col{display:none}
+  .h-active-time{
+    position:absolute;top:16px;left:20px;
+    font-family:'Manrope',sans-serif;font-weight:700;font-size:28px;color:#000;z-index:10
+  }
+  .metrics-grid{
+    position:absolute;left:0;top:auto;bottom:186px;
+    width:50%;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto auto auto;
+    gap:0;
+  }
+  .mcell{padding:12px 8px 12px 16px}
+  .mval{font-size:40px}
+  .munit{font-size:18px}
+  .mlabel{font-size:11px}
+  .w-icon{display:none}
+  .h-bottom{display:none}
+  #sticky-cta{
+    width:100%;height:72px;flex-direction:row;padding:0 24px;gap:16px
+  }
+  .cta-label{font-size:11px;letter-spacing:1px}
+}
+
+/* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal-box{background:#fff;width:480px;max-width:90vw;padding:48px 44px;position:relative}
@@ -169,17 +237,19 @@ body{overflow-x:hidden}
   <div id="scroll-cue">scroll</div>
 </div>
 
-<!-- ZOOM OVERLAY: lives outside scenes, animates from thumb to runner position -->
+<!-- ZOOM OVERLAY -->
 <div id="zoom-overlay">
   <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
 </div>
 
 <!-- SCENE: HOURS -->
 <div id="scene-hours" class="scene">
-  <div class="h-bg" id="hBg"></div>
+  <div class="h-bg pat-poor" id="hBg"></div>
   <div class="logo h-logo">WON</div>
-  <!-- Runner panel: placeholder only, video comes from zoom overlay -->
-  <div id="runner-panel"></div>
+  <div class="h-active-time" id="hActiveTime">10:00</div>
+  <div id="runner-panel">
+    <video src="videos/runner.mp4" autoplay loop muted playsinline></video>
+  </div>
   <div class="hours-col" id="hoursCol"></div>
   <div class="w-icon" id="wIcon">&#x2601;&#xFE0F;</div>
   <div class="metrics-grid">
@@ -280,12 +350,12 @@ var HOURS=[
   {label:'22:00',feel:1, temp:4, wind:16,gust:24,rainPct:15,rainMm:'0.3',score:82,icon:'&#x1F319;'}
 ];
 var N=HOURS.length;
-var VPH=2, ZOOM_H=1, HR_H=1;
+var VPH=2,ZOOM_H=1,HR_H=1;
 
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
 function lerp(a,b,t){return a+(b-a)*t}
 function ease(t){return t<0.5?2*t*t:-1+(4-2*t)*t}
-function scoreColor(s){return s>=80?GOOD:s>=60?FAIR:POOR}
+function scoreClass(s){return s>=80?'pat-good':s>=60?'pat-fair':'pat-poor'}
 function show(el){el.style.opacity='1';el.style.pointerEvents='all'}
 function hide(el){el.style.opacity='0';el.style.pointerEvents='none'}
 
@@ -298,26 +368,29 @@ HOURS.forEach(function(h,i){
   col.appendChild(el);
 });
 
-var sceneIntro = document.getElementById('scene-intro');
-var sceneHours = document.getElementById('scene-hours');
-var sceneOutro = document.getElementById('scene-outro');
-var stickyCta  = document.getElementById('sticky-cta');
-var zOverlay   = document.getElementById('zoom-overlay');
-var zThumb     = document.getElementById('zthumb');
-var runnerPanel= document.getElementById('runner-panel');
-var hBg        = document.getElementById('hBg');
-var lastIdx=-1, ctaShown=false, startRect=null;
+var sceneIntro=document.getElementById('scene-intro');
+var sceneHours=document.getElementById('scene-hours');
+var sceneOutro=document.getElementById('scene-outro');
+var stickyCta =document.getElementById('sticky-cta');
+var zOverlay  =document.getElementById('zoom-overlay');
+var zThumb    =document.getElementById('zthumb');
+var hBg       =document.getElementById('hBg');
+var hActiveTime=document.getElementById('hActiveTime');
+var lastIdx=-1,ctaShown=false,startRect=null;
 
 function captureThumb(){
   var r=zThumb.getBoundingClientRect();
   startRect={left:r.left,top:r.top,width:r.width,height:r.height};
 }
 
-// Destination matches #runner-panel CSS exactly
 function destRect(){
   var vh=window.innerHeight;
+  var isMobile=window.innerWidth<=768;
+  if(isMobile){
+    return{left:Math.round(window.innerWidth/2),top:0,width:Math.round(window.innerWidth/2),height:vh-186};
+  }
   var h=Math.round(vh*0.88);
-  var w=500; // matches runner-panel width
+  var w=500;
   var top=Math.round((vh-h)/2);
   return{left:445,top:top,width:w,height:h};
 }
@@ -331,8 +404,10 @@ function updateHour(idx){
   if(idx===lastIdx)return;
   lastIdx=idx;
   var h=HOURS[idx];
-  hBg.style.background=scoreColor(h.score);
+  // Update background pattern class
+  hBg.className='h-bg '+scoreClass(h.score);
   document.getElementById('wIcon').innerHTML=h.icon;
+  hActiveTime.textContent=h.label;
   flip(document.getElementById('mFeel'),    h.feel+'<span class="munit">&#xB0;</span>');
   flip(document.getElementById('mTemp'),    h.temp+'<span class="munit">&#xB0;</span>');
   flip(document.getElementById('mWind'),    h.wind+'<span class="munit">W</span>');
@@ -345,12 +420,11 @@ function updateHour(idx){
 function onScroll(){
   var sy=window.scrollY;
   var vh=window.innerHeight;
-  var introEnd = vh*VPH;
-  var zoomEnd  = vh*(VPH+ZOOM_H);
-  var hoursEnd = vh*(VPH+ZOOM_H+N*HR_H);
+  var introEnd=vh*VPH;
+  var zoomEnd =vh*(VPH+ZOOM_H);
+  var hoursEnd=vh*(VPH+ZOOM_H+N*HR_H);
 
-  // INTRO — show intro, hide everything else
-  if(sy < introEnd){
+  if(sy<introEnd){
     show(sceneIntro);
     sceneIntro.style.opacity='1';
     hide(sceneHours);
@@ -361,20 +435,15 @@ function onScroll(){
     return;
   }
 
-  // ZOOM — intro fades, hours bg fades in, video zooms
-  if(sy < zoomEnd){
+  if(sy<zoomEnd){
     var p=(sy-introEnd)/(zoomEnd-introEnd);
     var t=ease(p);
-    if(!startRect) captureThumb();
+    if(!startRect)captureThumb();
     var dr=destRect();
-
-    // Hide intro, show orange hours bg immediately
     hide(sceneIntro);
     show(sceneHours);
     sceneHours.style.opacity='1';
-
-    // Zoom overlay — pure zoom, no fade
-    zThumb.style.opacity=String(clamp(1-p*3,0,1));
+    zThumb.style.opacity=String(clamp(1-p*4,0,1));
     zOverlay.style.opacity='1';
     zOverlay.style.left  =lerp(startRect.left,  dr.left,  t)+'px';
     zOverlay.style.top   =lerp(startRect.top,   dr.top,   t)+'px';
@@ -384,18 +453,11 @@ function onScroll(){
     return;
   }
 
-  // HOURS — keep overlay visible at dest position
   hide(sceneIntro);
-  var dr=destRect();
-  zOverlay.style.left=dr.left+'px';
-  zOverlay.style.top=dr.top+'px';
-  zOverlay.style.width=dr.width+'px';
-  zOverlay.style.height=dr.height+'px';
-  zOverlay.style.borderRadius='0';
-  zOverlay.style.opacity='1';
+  zOverlay.style.opacity='0';
   zThumb.style.opacity='0';
 
-  if(sy < hoursEnd){
+  if(sy<hoursEnd){
     show(sceneHours);
     sceneHours.style.opacity='1';
     hide(sceneOutro);
@@ -405,7 +467,6 @@ function onScroll(){
     return;
   }
 
-  // OUTRO
   hide(sceneHours);
   show(sceneOutro);
   if(!ctaShown){ctaShown=true;stickyCta.style.opacity='1';stickyCta.style.pointerEvents='all';}
@@ -417,7 +478,6 @@ window.addEventListener('resize',function(){startRect=null;captureThumb();});
 window.addEventListener('scroll',onScroll,{passive:true});
 updateHour(0);
 
-// Strava
 var CLIENT_ID='YOUR_CLIENT_ID';
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
